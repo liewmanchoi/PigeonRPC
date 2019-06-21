@@ -1,4 +1,4 @@
-package com.liewmanchoi.pigeon.rpc.protocol.api;
+package com.liewmanchoi.pigeon.rpc.serialization.api;
 
 /**
  * @author wangsheng

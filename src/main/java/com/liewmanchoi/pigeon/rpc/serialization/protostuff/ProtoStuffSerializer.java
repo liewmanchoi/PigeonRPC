@@ -1,6 +1,6 @@
-package com.liewmanchoi.pigeon.rpc.protocol.protostuff;
+package com.liewmanchoi.pigeon.rpc.serialization.protostuff;
 
-import com.liewmanchoi.pigeon.rpc.protocol.api.ISerializer;
+import com.liewmanchoi.pigeon.rpc.serialization.api.ISerializer;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
