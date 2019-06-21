@@ -33,7 +33,12 @@
             <artifactId>objenesis</artifactId>
             <version>3.0.1</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.36.Final</version>
+        </dependency>
     </dependencies>
     
     
