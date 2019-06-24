@@ -22,7 +22,7 @@ public class RpcRequest implements Serializable {
     /**
      * 服务提供者信息
      */
-    private ProviderService providerService;
+    private ProviderInfo providerInfo;
     /**
      * 调用的方法名称
      */

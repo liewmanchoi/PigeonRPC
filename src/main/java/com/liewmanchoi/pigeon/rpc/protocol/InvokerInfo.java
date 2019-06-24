@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 @Getter
 @Setter
 @NoArgsConstructor
-public class InvokerService implements Serializable {
+public class InvokerInfo implements Serializable {
     private static final long serialVersionUID = 4948885607772397607L;
 
     private Class<?> serviceInterface;

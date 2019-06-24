@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProviderService implements Serializable {
+public class ProviderInfo implements Serializable {
     private static final long serialVersionUID = 7686433457110952588L;
     /**
      * 服务接口，服务调用端获取后缓存在本地，用于发起调用服务
@@ -55,19 +55,19 @@ public class ProviderService implements Serializable {
     private int workerThreads = 10;
 
     @Override
-    public ProviderService clone() throws CloneNotSupportedException {
+    public ProviderInfo clone() throws CloneNotSupportedException {
         super.clone();
-        ProviderService providerService = new ProviderService();
-        providerService.setServiceInterface(serviceInterface);
-        providerService.setServiceObject(serviceObject);
-        providerService.setServiceMethod(serviceMethod);
-        providerService.setServerPort(serverPort);
-        providerService.setTimeout(timeout);
-        providerService.setAppKey(appKey);
-        providerService.setGroupName(groupName);
-        providerService.setWeight(weight);
-        providerService.setWorkerThreads(workerThreads);
+        ProviderInfo providerInfo = new ProviderInfo();
+        providerInfo.setServiceInterface(serviceInterface);
+        providerInfo.setServiceObject(serviceObject);
+        providerInfo.setServiceMethod(serviceMethod);
+        providerInfo.setServerPort(serverPort);
+        providerInfo.setTimeout(timeout);
+        providerInfo.setAppKey(appKey);
+        providerInfo.setGroupName(groupName);
+        providerInfo.setWeight(weight);
+        providerInfo.setWorkerThreads(workerThreads);
 
-        return providerService;
+        return providerInfo;
     }
 }
