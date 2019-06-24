@@ -14,7 +14,7 @@ import java.util.Properties;
 @Slf4j
 @Getter
 public class PropertyConfigure {
-    private static final String PROPERTY_CLASSPATH = "/pigeon.properties";
+    private static final String PROPERTY_CLASSPATH = "/pigeon-config.properties";
     private static final Properties PROPERTIES = new Properties();
     /**
      * zookeeper服务地址
@@ -40,7 +40,7 @@ public class PropertyConfigure {
     static {
         try (InputStream inputStream = PropertyConfigure.class.getResourceAsStream(PROPERTY_CLASSPATH)) {
             if (inputStream == null) {
-                throw new IllegalStateException("pigeon.properties cannot be found in the classpath.");
+                throw new IllegalStateException("pigeon-config.properties cannot be found in the classpath.");
             }
 
             PROPERTIES.load(inputStream);
