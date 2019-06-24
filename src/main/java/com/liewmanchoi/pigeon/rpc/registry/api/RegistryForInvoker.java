@@ -1,7 +1,7 @@
 package com.liewmanchoi.pigeon.rpc.registry.api;
 
-import com.liewmanchoi.pigeon.rpc.protocol.InvokerService;
-import com.liewmanchoi.pigeon.rpc.protocol.ProviderService;
+import com.liewmanchoi.pigeon.rpc.protocol.InvokerInfo;
+import com.liewmanchoi.pigeon.rpc.protocol.ProviderInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ public interface RegistryForInvoker {
      * @param invokerService 服务消费者信息
      * @date 2019/6/22
      */
-    void registerInvoker(final InvokerService invokerService);
+    void registerInvoker(final InvokerInfo invokerService);
     /**
      * 初始化消费者端本地缓存数据结构
      *
@@ -30,5 +30,5 @@ public interface RegistryForInvoker {
      * @return java.util.Map<java.lang.String, java.util.List < com.liewmanchoi.pigeon.rpc.protocol.ProviderService>>
      * @date 2019/6/22
      */
-    Map<String, List<ProviderService>> getProviderServiceMap();
+    Map<String, List<ProviderInfo>> getProviderServiceMap();
 }
