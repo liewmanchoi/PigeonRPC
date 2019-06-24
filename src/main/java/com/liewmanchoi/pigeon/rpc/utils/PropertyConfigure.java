@@ -12,30 +12,29 @@ import java.util.Properties;
  * @date 2019/6/23
  */
 @Slf4j
-@Getter
 public class PropertyConfigure {
     private static final String PROPERTY_CLASSPATH = "/pigeon-config.properties";
     private static final Properties PROPERTIES = new Properties();
     /**
      * zookeeper服务地址
      */
-    private static String connectString;
+    private static @Getter String  connectString;
     /**
      * 会话超时时间
      */
-    private static int sessionTimeoutMs;
+    private static @Getter int sessionTimeoutMs;
     /**
      * 连接创建超时时间
      */
-    private static int connectionTimeoutMs;
+    private static @Getter int connectionTimeoutMs;
     /**
      * 服务提供者的Netty连接数
      */
-    private static int providerConnectionSize;
+    private static @Getter int providerConnectionSize;
     /**
      * 序列化类型
      */
-    private static SerializerType serializerType;
+    private static @Getter SerializerType serializerType;
 
     static {
         try (InputStream inputStream = PropertyConfigure.class.getResourceAsStream(PROPERTY_CLASSPATH)) {
@@ -54,5 +53,4 @@ public class PropertyConfigure {
             t.printStackTrace();
         }
     }
-
 }
