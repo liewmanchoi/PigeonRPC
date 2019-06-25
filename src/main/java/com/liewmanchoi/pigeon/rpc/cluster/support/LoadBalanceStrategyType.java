@@ -38,7 +38,7 @@ public enum LoadBalanceStrategyType {
     }
 
     public static LoadBalanceStrategyType queryByCode(String code) {
-        if (code == null || code.equals("")) {
+        if (code == null || "".equals(code)) {
             return null;
         }
 
