@@ -1,6 +1,7 @@
 package com.liewmanchoi.pigeon.rpc.common.enumeration;
 
 import lombok.Getter;
+import org.omg.CORBA.UNKNOWN;
 
 /**
  * @author wangsheng
@@ -17,7 +18,11 @@ public enum ErrorEnum {
     /**
      * 对象回收复用失败
      */
-    RECYCLER_ERROR("对象回收复用失败");
+    RECYCLER_ERROR("对象回收复用失败"),
+    /**
+     * localhost解析失败
+     */
+    UNKNOWN_HOST_EXCEPTION("localhost解析失败");
 
     private @Getter String errorCode;
 
