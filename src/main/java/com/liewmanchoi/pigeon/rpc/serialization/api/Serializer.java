@@ -1,18 +1,21 @@
 package com.liewmanchoi.pigeon.rpc.serialization.api;
 
+import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
+
 /**
  * @author wangsheng
  * @date 2019/6/21
  */
-public interface ISerializer {
+public interface Serializer {
     /**
      * serialize
      *
      * @param obj 待序列化对象
      * @return byte[]
+     * @exception RPCException 异常
      * @date 2019/6/21
      */
-    <T> byte[] serialize(T obj);
+    <T> byte[] serialize(T obj) throws RPCException;
 
     /**
      * deserialize
@@ -22,5 +25,5 @@ public interface ISerializer {
      * @return T
      * @date 2019/6/21
      */
-    <T> T deserialize(byte[] data, Class<T> clazz);
+    <T> T deserialize(byte[] data, Class<T> clazz) throws RPCException;
 }
