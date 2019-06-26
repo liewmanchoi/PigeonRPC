@@ -47,14 +47,13 @@ public interface Client {
     /**
      * 处理调用返回结果RPCResponse
      *
-     * @param [response]
+     * @param response RPC调用结果
      * @date 2019/6/26
      */
     void handleRPCResponse(RPCResponse response);
     /**
      * TODO:更新注释
      *
-     * @param []
      * @return boolean
      * @date 2019/6/26
      */
@@ -62,7 +61,7 @@ public interface Client {
     /**
      * 更新服务注册ServiceURL
      *
-     * @param [serviceURL]
+     * @param serviceURL ServiceURL
      * @date 2019/6/26
      */
     void updateServiceConfig(ServiceURL serviceURL);
