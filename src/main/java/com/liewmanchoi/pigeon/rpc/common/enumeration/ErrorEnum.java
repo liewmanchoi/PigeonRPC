@@ -13,7 +13,11 @@ public enum ErrorEnum {
     /**
      * 自定义RPCException消息模板替换出错
      */
-    TEMPLATE_REPLACEMENT_ERROR("自定义RPCException消息模板替换出错");
+    TEMPLATE_REPLACEMENT_ERROR("自定义RPCException消息模板替换出错"),
+    /**
+     * 对象回收复用失败
+     */
+    RECYCLER_ERROR("对象回收复用失败");
 
     private @Getter String errorCode;
 
