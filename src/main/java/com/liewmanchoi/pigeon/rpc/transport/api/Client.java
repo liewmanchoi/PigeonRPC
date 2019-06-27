@@ -52,7 +52,7 @@ public interface Client {
      */
     void handleRPCResponse(RPCResponse response);
     /**
-     * TODO:更新注释
+     * Client是否可用
      *
      * @return boolean
      * @date 2019/6/26

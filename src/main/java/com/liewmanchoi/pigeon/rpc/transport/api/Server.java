@@ -9,9 +9,9 @@ import io.netty.channel.ChannelHandlerContext;
  */
 public interface Server {
     /**
-     * TODO: 增加注释
+     * 启动
      */
-    void run();
+    void start();
     /**
      * 处理RPC调用请求
      *
