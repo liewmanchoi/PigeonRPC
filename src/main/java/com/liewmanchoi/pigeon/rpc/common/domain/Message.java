@@ -9,6 +9,10 @@ import java.io.Serializable;
 /**
  * 发送/接收POJO消息对象的抽象
  *
+ * 注意事项：
+ * Message#type字段直接放入到字节流中，真正序列化和反序列化的对象只有RPCRequest和RPCResponse
+ * 好处：PING/PONG只需要发送1个字节，RPCResponse/RPCRequest对象可以使用对象池复用回收
+ *
  * @author wangsheng
  * @date 2019/6/27
  */
@@ -18,19 +22,19 @@ import java.io.Serializable;
 public class Message implements Serializable {
     // 定义消息类型
 
-    public static final Byte PING = 1;
-    public static final Byte PONG = 1 << 1;
-    public static final Byte REQUEST = 1 << 2;
-    public static final Byte RESPONSE = 1 << 3;
+    public static final byte PING = 1;
+    public static final byte PONG = 1 << 1;
+    public static final byte REQUEST = 1 << 2;
+    public static final byte RESPONSE = 1 << 3;
 
     public static final Message PING_MSG = new Message(PING);
     public static final Message PONG_MSG = new Message(PONG);
 
-    private Byte type;
+    private byte type;
     private RPCRequest rpcRequest;
     private RPCResponse rpcResponse;
 
-    public Message(Byte type) {
+    public Message(byte type) {
         this.type = type;
     }
 
