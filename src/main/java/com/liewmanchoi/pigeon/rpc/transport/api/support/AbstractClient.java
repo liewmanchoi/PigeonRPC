@@ -34,6 +34,7 @@ import java.util.concurrent.*;
  */
 @Slf4j
 public abstract class AbstractClient implements Client {
+    // TODO: 使用EventLoop.schedule()进行调度
     /**
      * 延时任务调度线程池（线程池中只有一个线程）
      */
