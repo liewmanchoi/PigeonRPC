@@ -30,7 +30,11 @@ public enum ErrorEnum {
     /**
      * Endpoint关闭后仍在提交任务
      */
-    SUBMIT_AFTER_ENDPOINT_CLOSED("Endpoint关闭后仍在提交任务");
+    SUBMIT_AFTER_ENDPOINT_CLOSED("Endpoint关闭后仍在提交任务"),
+    /**
+     * 超过心跳超时时间
+     */
+    HEART_BEAT_TIME_OUT_EXCEED("超过心跳超时时间");
 
     private @Getter String errorCode;
 

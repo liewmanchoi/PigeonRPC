@@ -1,5 +1,6 @@
 package com.liewmanchoi.pigeon.rpc.config;
 
+import com.liewmanchoi.pigeon.rpc.serialization.api.Serializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +18,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GlobalConfig {
     // TODO: GlobalConfig待完成
+
+    public Serializer getSerializer() {
+        // TODO: getSerializer()
+        return null;
+    }
 }
