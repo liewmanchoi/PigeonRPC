@@ -17,11 +17,11 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2019/6/28
  */
 @Slf4j
-public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
+public class ClientHeartBeatHandler extends ChannelInboundHandlerAdapter {
     private int count = 0;
     private Client client;
 
-    public HeartBeatHandler(Client client) {
+    public ClientHeartBeatHandler(Client client) {
         this.client = client;
     }
 

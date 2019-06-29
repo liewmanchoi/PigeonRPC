@@ -40,9 +40,9 @@ public class PigeonClient extends AbstractClient {
                         // ByteBuf -> Message
                 .addLast("PigeonDecoder", new PigeonDecoder(getGlobalConfig().getSerializer()))
                 // 心跳检测
-                .addLast("HearBeatHandler", new HeartBeatHandler(PigeonClient.this))
+                .addLast("ClientHearBeatHandler", new ClientHeartBeatHandler(PigeonClient.this))
                 // 处理消息
-                .addLast("MessageHandler", new MessageHandler(PigeonClient.this));
+                .addLast("ClientMessageHandler", new ClientMessageHandler(PigeonClient.this));
             }
         };
     }

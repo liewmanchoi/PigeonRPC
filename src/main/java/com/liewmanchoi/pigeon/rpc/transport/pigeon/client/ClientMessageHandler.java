@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @AllArgsConstructor
-public class MessageHandler extends ChannelInboundHandlerAdapter {
+public class ClientMessageHandler extends ChannelInboundHandlerAdapter {
     private Client client;
 
     @Override
