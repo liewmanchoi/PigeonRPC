@@ -17,7 +17,6 @@ public interface Server {
      *
      * @param request 请求体
      * @param ctx ChannelHandlerContext
-     * @return void
      * @date 2019/6/26
      */
     void handleRPCRequest(RPCRequest request, ChannelHandlerContext ctx);

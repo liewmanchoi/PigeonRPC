@@ -23,4 +23,9 @@ public class GlobalConfig {
         // TODO: getSerializer()
         return null;
     }
+
+    public int getPort() {
+        // TODO: getPort()
+        return 0;
+    }
 }
