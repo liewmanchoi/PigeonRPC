@@ -22,7 +22,19 @@ public enum ErrorEnum {
     /**
      * localhost解析失败
      */
-    UNKNOWN_HOST_EXCEPTION("localhost解析失败");
+    UNKNOWN_HOST_EXCEPTION("localhost解析失败"),
+    /**
+     * 客户端无法建立到服务端的连接
+     */
+    CONNECT_TO_SERVER_FAILURE("客户端无法建立到服务端的连接"),
+    /**
+     * Endpoint关闭后仍在提交任务
+     */
+    SUBMIT_AFTER_ENDPOINT_CLOSED("Endpoint关闭后仍在提交任务"),
+    /**
+     * 超过心跳超时时间
+     */
+    HEART_BEAT_TIME_OUT_EXCEED("超过心跳超时时间");
 
     private @Getter String errorCode;
 
