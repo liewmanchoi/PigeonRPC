@@ -1,4 +1,4 @@
-package com.liewmanchoi.pigeon.rpc.protocol.api.support;
+package com.liewmanchoi.pigeon.rpc.protocol.api.invoker.support;
 
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
 import com.liewmanchoi.pigeon.rpc.transport.api.Client;

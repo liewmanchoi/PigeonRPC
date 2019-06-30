@@ -2,8 +2,8 @@ package com.liewmanchoi.pigeon.rpc.filter;
 
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.protocol.api.InvokeArgs;
-import com.liewmanchoi.pigeon.rpc.protocol.api.Invoker;
+import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.InvokeArgs;
+import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 
 /**
  * Filter接口

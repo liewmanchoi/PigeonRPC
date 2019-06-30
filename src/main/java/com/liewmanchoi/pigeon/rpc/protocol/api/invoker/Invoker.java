@@ -1,4 +1,4 @@
-package com.liewmanchoi.pigeon.rpc.protocol.api;
+package com.liewmanchoi.pigeon.rpc.protocol.api.invoker;
 
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
