@@ -5,6 +5,12 @@ import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
 
 /**
+ * 抽象的服务调用者
+ *
+ * 包括consumer端的代理实例和provider端的服务实现类实例 <br>
+ * 对于consumer端而言，一个协议Invoker（由Protocol调用其refer生成的实例）对应于一个接口的一个服务器实现(interface, address) <br>
+ * 一个ClusterInvoker对应于一个接口的所有服务器实现(interface)
+ *
  * @author wangsheng
  * @date 2019/6/26
  */
@@ -45,4 +51,12 @@ public interface Invoker<T> {
      * @date 2019/6/26
      */
     ServiceURL getServiceURL();
+
+    /**
+     * Invoker是否可用
+     *
+     * @return boolean
+     * @date 2019/6/30
+     */
+    boolean isAvailable();
 }
