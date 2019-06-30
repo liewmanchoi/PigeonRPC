@@ -1,5 +1,6 @@
 package com.liewmanchoi.pigeon.rpc.protocol.api.invoker;
 
+import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
@@ -7,7 +8,7 @@ import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
 /**
  * 抽象的服务调用者
  *
- * 包括consumer端的代理实例和provider端的服务实现类实例 <br>
+ * 包括consumer端的代理实例InvokerDelegate和provider端的服务实现类实例Exporter <br>
  * 对于consumer端而言，一个协议Invoker（由Protocol调用其refer生成的实例）对应于一个接口的一个服务器实现(interface, address) <br>
  * 一个ClusterInvoker对应于一个接口的所有服务器实现(interface)
  *
@@ -34,12 +35,12 @@ public interface Invoker<T> {
     /**
      * invoke
      *
-     * @param invokeArgs 调用参数
+     * @param RPCRequestWrapper 调用参数
      * @return com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse
      * @exception RPCException 自定义异常
      * @date 2019/6/26
      */
-    RPCResponse invoke(InvokeArgs invokeArgs) throws RPCException;
+    RPCResponse invoke(RPCRequestWrapper RPCRequestWrapper) throws RPCException;
 
     /**
      * 返回注册地址

@@ -3,6 +3,7 @@ package com.liewmanchoi.pigeon.rpc.common.domain;
 import com.liewmanchoi.pigeon.rpc.common.utils.TypeUtil;
 import io.netty.util.Recycler;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.Arrays;
  * @author wangsheng
  * @date 2019/6/22
  */
+@Slf4j
 @Data
 public class RPCRequest implements Serializable {
     private final transient Recycler.Handle<RPCRequest> handle;
@@ -54,18 +56,23 @@ public class RPCRequest implements Serializable {
         }
     }
 
-    public Class[] getArgTypes() throws ClassNotFoundException {
+    public Class[] getArgTypes() {
         Class[] argClasses = new Class[argTypes.length];
 
-        for (int i = 0; i < argTypes.length; i++) {
-            if (TypeUtil.isPrimitive(argTypes[i])) {
-                // 如果属于基本数据类型
-                argClasses[i] = TypeUtil.map(argTypes[i]);
-            } else {
-                // 如果不属于基本类型，则通过反射获取
-                argClasses[i] = Class.forName(argTypes[i]);
+        try {
+            for (int i = 0; i < argTypes.length; i++) {
+                if (TypeUtil.isPrimitive(argTypes[i])) {
+                    // 如果属于基本数据类型
+                    argClasses[i] = TypeUtil.map(argTypes[i]);
+                } else {
+                    // 如果不属于基本类型，则通过反射获取
+                    argClasses[i] = Class.forName(argTypes[i]);
+                }
             }
+        } catch (ClassNotFoundException e) {
+            log.error("找不到字符串名称对应的类", e);
         }
+
 
         return argClasses;
     }

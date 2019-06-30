@@ -2,7 +2,7 @@ package com.liewmanchoi.pigeon.rpc.filter;
 
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.InvokeArgs;
+import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 
 /**
@@ -16,9 +16,9 @@ public interface Filter {
      * invoke接口
      *
      * @param invoker Invoker
-     * @param invokeArgs invokeArgs
+     * @param RPCRequestWrapper RPCRequestWrapper
      * @return RPCResponse
      * @throws RPCException 异常
      */
-    <T> RPCResponse invoke(Invoker<T> invoker, InvokeArgs invokeArgs) throws RPCException;
+    <T> RPCResponse invoke(Invoker<T> invoker, RPCRequestWrapper RPCRequestWrapper) throws RPCException;
 }

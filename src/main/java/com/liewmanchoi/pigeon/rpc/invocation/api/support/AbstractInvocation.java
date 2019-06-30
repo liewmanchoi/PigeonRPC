@@ -6,7 +6,7 @@ import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.config.ReferenceConfig;
 import com.liewmanchoi.pigeon.rpc.invocation.api.Invocation;
-import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.InvokeArgs;
+import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.Future;
@@ -19,10 +19,10 @@ import java.util.function.Function;
 @Slf4j
 public abstract class AbstractInvocation implements Invocation {
     @Override
-    public final RPCResponse invoke(InvokeArgs invokeArgs, Function<RPCRequest, Future<RPCResponse>> requestProcessor) throws RPCException {
+    public final RPCResponse invoke(RPCRequestWrapper RPCRequestWrapper, Function<RPCRequest, Future<RPCResponse>> requestProcessor) throws RPCException {
         RPCResponse rpcResponse;
-        ReferenceConfig<?> referenceConfig = invokeArgs.getReferenceConfig();
-        RPCRequest rpcRequest = invokeArgs.getRpcRequest();
+        ReferenceConfig<?> referenceConfig = RPCRequestWrapper.getReferenceConfig();
+        RPCRequest rpcRequest = RPCRequestWrapper.getRpcRequest();
 
         try {
             rpcResponse = doInvoke(rpcRequest, referenceConfig, requestProcessor);
