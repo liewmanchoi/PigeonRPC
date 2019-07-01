@@ -35,7 +35,7 @@ public abstract class AbstractProtocol implements Protocol {
     @Override
     public ServiceConfig<?> referLocalService(String interfaceName) throws RPCException {
         if (exporterMap.containsKey(interfaceName)) {
-            log.error("无法找到服务-[{}]，服务可能没有发布", interfaceName);
+            log.warn("无法找到服务-[{}]，服务可能没有发布", interfaceName);
             return null;
         }
 

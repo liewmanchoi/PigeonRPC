@@ -48,5 +48,5 @@ public interface Protocol {
      *
      * @date 2019/6/30
      */
-    void close();
+    void destroy();
 }

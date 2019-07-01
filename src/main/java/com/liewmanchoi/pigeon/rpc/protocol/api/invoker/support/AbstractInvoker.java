@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public abstract class AbstractInvoker<T> implements Invoker<T> {
     @Setter
-    private Class<T> interfaceClazz;
+    private Class<T> interfaceClass;
 
     @Getter
     @Setter
@@ -28,12 +28,12 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
 
     @Override
     public Class<T> getInterface() {
-        return interfaceClazz;
+        return interfaceClass;
     }
 
     @Override
     public String getInterfaceName() {
-        return interfaceClazz.getName();
+        return interfaceClass.getName();
     }
 
     @Override
