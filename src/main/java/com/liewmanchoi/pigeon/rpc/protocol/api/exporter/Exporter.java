@@ -4,7 +4,7 @@ import com.liewmanchoi.pigeon.rpc.config.ServiceConfig;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 
 /**
- * 进行完服务发布以后的服务提供者
+ * 进行完服务发布以后的服务提供者，在服务端产生
  *
  * @author wangsheng
  * @date 2019/6/26
