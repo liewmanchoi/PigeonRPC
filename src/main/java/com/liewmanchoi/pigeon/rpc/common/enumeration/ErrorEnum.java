@@ -34,7 +34,19 @@ public enum ErrorEnum {
     /**
      * 超过心跳超时时间
      */
-    HEART_BEAT_TIME_OUT_EXCEED("超过心跳超时时间");
+    HEART_BEAT_TIME_OUT_EXCEED("超过心跳超时时间"),
+    /**
+     * 获取本地Host失败
+     */
+    READ_LOCALHOST_ERROR("读取本地Host失败"),
+    /**
+     * 调用失败
+     */
+    INVOKE_FAILURE("调用失败"),
+    /**
+     * 非常调用类型
+     */
+    ILLEGAL_INVOCATION_TYPE("非法调用类型");
 
     private @Getter String errorCode;
 
