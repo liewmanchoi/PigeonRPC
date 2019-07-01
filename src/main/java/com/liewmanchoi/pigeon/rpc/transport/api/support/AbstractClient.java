@@ -178,6 +178,7 @@ public abstract class AbstractClient implements Client {
         }
 
         log.info("客户端发起请求：{}，请求的服务器-{}", request, serviceURL.getAddress());
+        // TODO: CompletableFuture改进
         CompletableFuture<RPCResponse> responseCompletableFuture = new CompletableFuture<>();
         // 缓存结果
         RPCThreadSharedContext.registerResponseFuture(request.getRequestId(), responseCompletableFuture);
@@ -189,13 +190,6 @@ public abstract class AbstractClient implements Client {
 
         // 返回异步调用结果
         return responseCompletableFuture;
-    }
-
-
-
-    @Override
-    public void handleCallbackRequest(RPCRequest request, ChannelHandlerContext ctx) {
-        // TODO: 待完成handleCallbackRequest功能
     }
 
     @Override
