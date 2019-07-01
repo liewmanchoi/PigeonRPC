@@ -1,5 +1,6 @@
 package com.liewmanchoi.pigeon.rpc.config;
 
+import com.liewmanchoi.pigeon.rpc.registry.api.ServiceRegistry;
 import com.liewmanchoi.pigeon.rpc.serialization.api.Serializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class GlobalConfig {
+    private RegistryConfig registryConfig;
+
     // TODO: GlobalConfig待完成
 
     public Serializer getSerializer() {
@@ -27,5 +30,9 @@ public class GlobalConfig {
     public int getPort() {
         // TODO: getPort()
         return 0;
+    }
+
+    public ServiceRegistry getServiceRegistry() {
+        return registryConfig.getRegistryInstance();
     }
 }

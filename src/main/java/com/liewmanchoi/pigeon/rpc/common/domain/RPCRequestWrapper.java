@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// TODO: RPCRequestWrapper应该考虑与RPCRequest合二为一，由RPCRequest持有ReferenceConfig配置类对象
+
 /**
  * @author wangsheng
  * @date 2019/6/26

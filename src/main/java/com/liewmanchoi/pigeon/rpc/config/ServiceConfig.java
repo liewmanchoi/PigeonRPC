@@ -6,6 +6,7 @@ package com.liewmanchoi.pigeon.rpc.config;
  * @author wangsheng
  * @date 2019/6/27
  */
-public class ServiceConfig<T> {
+public class ServiceConfig<T> extends AbstractConfig {
+    private String interfaceName;
     // TODO: 待实现ServiceConfig类
 }

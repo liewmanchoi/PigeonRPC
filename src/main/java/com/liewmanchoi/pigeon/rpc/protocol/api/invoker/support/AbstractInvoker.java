@@ -1,5 +1,8 @@
 package com.liewmanchoi.pigeon.rpc.protocol.api.invoker.support;
 
+import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
+import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
+import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
 import com.liewmanchoi.pigeon.rpc.filter.Filter;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
@@ -38,13 +41,28 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
         return ServiceURL.DEFAULT_SERVICE_URL;
     }
 
-    // TODO: buildFilterChain()
     /**
      * 构建Filter链
      * @param filters Filter对象列表
      * @return Invoker
      */
     public Invoker<T> buildFilterChain(List<Filter> filters) {
-        return null;
+        Invoker<T> last = this;
+
+        if (!filters.isEmpty()) {
+            for (int i = filters.size() - 1; i >= 0; --i) {
+                final Filter filter = filters.get(i);
+                final Invoker<T> next = last;
+
+                last = new AbstractInvokerDelegate<T>(this) {
+                    @Override
+                    public RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException {
+                        return filter.invoke(next, rpcRequestWrapper);
+                    }
+                };
+            }
+        }
+
+        return last;
     }
 }

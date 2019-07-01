@@ -33,14 +33,12 @@ public interface Invoker<T> {
     String getInterfaceName();
 
     /**
-     * invoke
      *
-     * @param RPCRequestWrapper 调用参数
-     * @return com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse
-     * @exception RPCException 自定义异常
-     * @date 2019/6/26
+     * @param rpcRequestWrapper 调用参数
+     * @return RPCResponse
+     * @throws RPCException 自定义异常
      */
-    RPCResponse invoke(RPCRequestWrapper RPCRequestWrapper) throws RPCException;
+    RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException;
 
     /**
      * 返回注册地址
