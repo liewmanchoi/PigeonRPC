@@ -13,6 +13,8 @@ import java.util.function.Function;
  * @date 2019/6/30
  */
 public interface Invocation {
+    // TODO: Invocation接口需要修改方法签名
+
     /**
      * Invocation接口
      * @param RPCRequestWrapper request请求
@@ -20,5 +22,7 @@ public interface Invocation {
      * @return RPCResponse
      * @throws RPCException 自定义异常
      */
-    RPCResponse invoke(RPCRequestWrapper RPCRequestWrapper, Function<RPCRequest, Future<RPCResponse>> requestProcessor) throws RPCException;
+    RPCResponse invoke(RPCRequestWrapper RPCRequestWrapper,
+                        Function<RPCRequest, Future<RPCResponse>> requestProcessor) throws RPCException;
+
 }
