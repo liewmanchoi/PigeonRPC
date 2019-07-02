@@ -46,7 +46,15 @@ public enum ErrorEnum {
     /**
      * 非常调用类型
      */
-    ILLEGAL_INVOCATION_TYPE("非法调用类型");
+    ILLEGAL_INVOCATION_TYPE("非法调用类型"),
+    /**
+     * 无法查找到可用的服务提供者
+     */
+    NO_SERVER_AVAILABLE("无法查找到可用的服务提供者"),
+    /**
+     * 服务调用失败
+     */
+    SERVICE_INVOCATION_FAILURE("服务调用失败");
 
     private @Getter String errorCode;
 

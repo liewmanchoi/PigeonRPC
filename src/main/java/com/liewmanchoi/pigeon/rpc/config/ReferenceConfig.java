@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * TODO: ReferenceConfig
@@ -19,8 +21,17 @@ import java.util.List;
 @Builder
 @Slf4j
 public class ReferenceConfig<T> {
+    /**
+     * interfaceName -> referenceConfig
+     */
+    private static final Map<String, ReferenceConfig<?>> REFERENCE_CONFIG_MAP = new ConcurrentHashMap<>();
+
     private Class<T> interfaceClass;
     private long timeout;
     private InvokeMode invokeMode;
     private List<Filter> filters;
+
+    public static ReferenceConfig<?> getConfigByInterfaceName(String interfaceName) {
+        return REFERENCE_CONFIG_MAP.get(interfaceName);
+    }
 }

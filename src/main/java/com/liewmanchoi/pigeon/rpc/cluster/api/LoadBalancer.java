@@ -17,7 +17,7 @@ public interface LoadBalancer {
      * @param request RPC请求
      * @return Invoker
      */
-    Invoker select(List<Invoker> invokers, RPCRequest request);
+    Invoker<?> select(List<Invoker> invokers, RPCRequest request);
 
     /**
      * 引用ClusterInvoker形式的服务

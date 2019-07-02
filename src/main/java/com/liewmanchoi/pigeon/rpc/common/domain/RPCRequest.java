@@ -3,6 +3,7 @@ package com.liewmanchoi.pigeon.rpc.common.domain;
 import com.liewmanchoi.pigeon.rpc.common.utils.TypeUtil;
 import io.netty.util.Recycler;
 import lombok.Data;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -22,7 +23,9 @@ import java.util.Arrays;
  */
 @Slf4j
 @Data
+@ToString
 public class RPCRequest implements Serializable {
+    @ToString.Exclude
     private final transient Recycler.Handle<RPCRequest> handle;
     /**
      * 标识返回值ID
