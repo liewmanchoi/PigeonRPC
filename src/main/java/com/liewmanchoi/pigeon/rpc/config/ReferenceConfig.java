@@ -26,12 +26,16 @@ public class ReferenceConfig<T> {
      */
     private static final Map<String, ReferenceConfig<?>> REFERENCE_CONFIG_MAP = new ConcurrentHashMap<>();
 
+    public static ReferenceConfig<?> getConfigByInterfaceName(String interfaceName) {
+        return REFERENCE_CONFIG_MAP.get(interfaceName);
+    }
+
     private Class<T> interfaceClass;
     private long timeout;
     private InvokeMode invokeMode;
     private List<Filter> filters;
 
-    public static ReferenceConfig<?> getConfigByInterfaceName(String interfaceName) {
-        return REFERENCE_CONFIG_MAP.get(interfaceName);
+    public String getInterfaceName() {
+        return interfaceClass.getName();
     }
 }
