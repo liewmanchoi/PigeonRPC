@@ -19,6 +19,8 @@ import java.util.*;
 public final class ServiceURL {
     @Getter
     private String address;
+    // TODO: 值为什么不是String而是List<String>？
+
     private Map<Key, List<String>> args = new HashMap<>();
 
     public static final ServiceURL DEFAULT_SERVICE_URL;
