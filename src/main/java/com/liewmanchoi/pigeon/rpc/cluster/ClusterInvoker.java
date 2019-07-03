@@ -1,5 +1,6 @@
 package com.liewmanchoi.pigeon.rpc.cluster;
 
+import com.liewmanchoi.pigeon.rpc.cluster.api.FaultToleranceHandler;
 import com.liewmanchoi.pigeon.rpc.cluster.api.LoadBalancer;
 import com.liewmanchoi.pigeon.rpc.common.context.RPCThreadPrivateContext;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
@@ -54,7 +55,9 @@ public class ClusterInvoker<T> implements Invoker<T> {
             return invokeOnce(getInvokers(), rpcRequestWrapper);
         } catch (RPCException e) {
             // 如果发生错误，则开启容错模式，显然容错只会对同步调用有效，因为异步调用的返回值为null，无法判断是否发生了异常
-            return globalConfig.getFaultToleranceHandler().handle(this, rpcRequestWrapper, e);
+            // 容错处理器
+            FaultToleranceHandler handler = globalConfig.getFaultToleranceHandler();
+            return handler.handle(this, rpcRequestWrapper, e);
         }
     }
 
@@ -119,12 +122,8 @@ public class ClusterInvoker<T> implements Invoker<T> {
         RPCThreadPrivateContext.getContext().setInvoker(invoker);
         RPCResponse response = invoker.invoke(rpcRequestWrapper);
 
-        if (response == null) {
-            // response为空，说明是异步调用ASYNC
-            return null;
-        }
-
-        if (response.hasError()) {
+        // response为空，说明是异步调用ASYNC
+        if (response != null && response.hasError()) {
             Throwable cause = response.getCause();
 
             // 回收response对象
@@ -133,6 +132,7 @@ public class ClusterInvoker<T> implements Invoker<T> {
             throw new RPCException(cause, ErrorEnum.SERVICE_INVOCATION_FAILURE, "服务调用失败");
         }
 
+        log.info("requestId为[{}]的调用成功", rpcRequestWrapper.getRpcRequest().getRequestId());
         return response;
     }
 
