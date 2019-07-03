@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 
 /**
  * 全局配置类。类中持有相关配置的实例
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class GlobalConfig {
+    private ApplicationConfig applicationConfig;
     private RegistryConfig registryConfig;
     private ProtocolConfig protocolConfig;
     private ClusterConfig clusterConfig;

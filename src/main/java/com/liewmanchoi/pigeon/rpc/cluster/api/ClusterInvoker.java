@@ -20,7 +20,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 对应于一个interface的所有服务器实现
+ * 对应于一个interface的所有服务器实现的抽象 <br>
+ * ClusterInvoker属于consumer side
  *
  * @author wangsheng
  * @date 2019/7/1

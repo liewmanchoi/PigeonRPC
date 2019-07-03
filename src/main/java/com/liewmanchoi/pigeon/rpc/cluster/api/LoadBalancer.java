@@ -7,6 +7,8 @@ import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 import java.util.List;
 
 /**
+ * 软负载均衡接口（属于consumer side)
+ *
  * @author wangsheng
  * @date 2019/7/2
  */
@@ -25,5 +27,5 @@ public interface LoadBalancer {
      * @param <T> Interface类型
      * @return Invoker<T>
      */
-    <T> Invoker<T> referCluster(ReferenceConfig<T> referenceConfig);
+    <T> ClusterInvoker<T> referCluster(ReferenceConfig<T> referenceConfig);
 }
