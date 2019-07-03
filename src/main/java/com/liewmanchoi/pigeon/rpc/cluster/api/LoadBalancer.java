@@ -1,5 +1,6 @@
 package com.liewmanchoi.pigeon.rpc.cluster.api;
 
+import com.liewmanchoi.pigeon.rpc.cluster.ClusterInvoker;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.config.ReferenceConfig;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;

@@ -1,5 +1,6 @@
-package com.liewmanchoi.pigeon.rpc.cluster.api;
+package com.liewmanchoi.pigeon.rpc.cluster;
 
+import com.liewmanchoi.pigeon.rpc.cluster.api.LoadBalancer;
 import com.liewmanchoi.pigeon.rpc.common.context.RPCThreadPrivateContext;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;

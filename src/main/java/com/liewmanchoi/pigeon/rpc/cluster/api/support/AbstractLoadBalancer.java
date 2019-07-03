@@ -1,6 +1,6 @@
-package com.liewmanchoi.pigeon.rpc.cluster.support;
+package com.liewmanchoi.pigeon.rpc.cluster.api.support;
 
-import com.liewmanchoi.pigeon.rpc.cluster.api.ClusterInvoker;
+import com.liewmanchoi.pigeon.rpc.cluster.ClusterInvoker;
 import com.liewmanchoi.pigeon.rpc.cluster.api.LoadBalancer;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
@@ -37,7 +37,7 @@ public abstract class AbstractLoadBalancer implements LoadBalancer {
         return invoker;
     }
 
-    abstract Invoker<?> doSelect(List<Invoker> invokers, RPCRequest request);
+    protected abstract Invoker<?> doSelect(List<Invoker> invokers, RPCRequest request);
 
     @SuppressWarnings("unchecked")
     @Override
