@@ -2,6 +2,7 @@ package com.liewmanchoi.pigeon.rpc.registry.api;
 
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +16,13 @@ import java.util.*;
  * @date 2019/6/26
  */
 @Slf4j
+@EqualsAndHashCode(of = {"address"})
 @ToString
 public final class ServiceURL {
     @Getter
     private String address;
+    // TODO: 值为什么不是String而是List<String>？
+
     private Map<Key, List<String>> args = new HashMap<>();
 
     public static final ServiceURL DEFAULT_SERVICE_URL;

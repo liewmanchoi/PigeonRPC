@@ -55,5 +55,5 @@ public interface Client {
      * @param serviceURL ServiceURL
      * @date 2019/6/26
      */
-    void updateServiceConfig(ServiceURL serviceURL);
+    void updateServiceURL(ServiceURL serviceURL);
 }
