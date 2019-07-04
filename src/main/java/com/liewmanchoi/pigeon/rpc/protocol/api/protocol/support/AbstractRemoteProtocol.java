@@ -64,10 +64,10 @@ public abstract class AbstractRemoteProtocol extends AbstractProtocol {
      *
      * @param serviceURL ServiceURL
      */
-    public final void updateServiceConfig(ServiceURL serviceURL) {
+    public final void updateServiceURL(ServiceURL serviceURL) {
         String address = serviceURL.getAddress();
         if (clientMap.containsKey(address)) {
-            clientMap.get(address).updateServiceConfig(serviceURL);
+            clientMap.get(address).updateServiceURL(serviceURL);
 
             // 更新lockMap
             lockMap.remove(address);

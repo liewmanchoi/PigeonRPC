@@ -54,7 +54,19 @@ public enum ErrorEnum {
     /**
      * 服务调用失败
      */
-    SERVICE_INVOCATION_FAILURE("服务调用失败");
+    SERVICE_INVOCATION_FAILURE("服务调用失败"),
+    /**
+     * 无法连接到Zookeeper集群
+     */
+    FAILED_CONNECT_ZOOKEEPER("无法连接到Zookeeper集群"),
+    /**
+     * 服务注册失败
+     */
+    SERVICE_REGISTER_FAILURE("服务注册失败"),
+    /**
+     * 服务发现故障
+     */
+    SERVICE_DISCOVER_FAILURE("服务发现故障");
 
     private @Getter String errorCode;
 

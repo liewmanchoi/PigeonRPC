@@ -205,7 +205,7 @@ public abstract class AbstractClient implements Client {
     }
 
     @Override
-    public void updateServiceConfig(ServiceURL serviceURL) {
+    public void updateServiceURL(ServiceURL serviceURL) {
         this.serviceURL = serviceURL;
     }
 
