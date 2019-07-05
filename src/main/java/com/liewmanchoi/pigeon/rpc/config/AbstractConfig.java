@@ -5,16 +5,25 @@ package com.liewmanchoi.pigeon.rpc.config;
  * @date 2019/6/30
  */
 public class AbstractConfig {
-    // TODO: AbstractConfig类实现
+  private GlobalConfig globalConfig;
 
+  public void init(GlobalConfig globalConfig) {
+    this.globalConfig = globalConfig;
+  }
 
-    private GlobalConfig globalConfig;
+  public ApplicationConfig getApplicationConfig() {
+    return globalConfig.getApplicationConfig();
+  }
 
-    public void init(GlobalConfig globalConfig) {
-        this.globalConfig = globalConfig;
-    }
+  public ClusterConfig getClusterConfig() {
+    return globalConfig.getClusterConfig();
+  }
 
-    public RegistryConfig getRegistryConfig() {
-        return globalConfig.getRegistryConfig();
-    }
+  public ProtocolConfig getProtocolConfig() {
+    return globalConfig.getProtocolConfig();
+  }
+
+  public RegistryConfig getRegistryConfig() {
+    return globalConfig.getRegistryConfig();
+  }
 }

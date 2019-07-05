@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 /**
  * @author wangsheng
  * @date 2019/6/30
@@ -16,19 +15,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegistryConfig {
-    private String type;
-    private String address;
-    private ServiceRegistry registryInstance;
+  private String type;
+  private String address;
+  private ServiceRegistry registryInstance;
 
-    public void init() {
-        if (registryInstance != null) {
-            registryInstance.init();
-        }
+  public void init() {
+    if (registryInstance != null) {
+      registryInstance.init();
     }
+  }
 
-    public void close() {
-        if (registryInstance != null) {
-            registryInstance.close();
-        }
+  public void close() {
+    if (registryInstance != null) {
+      registryInstance.close();
     }
+  }
 }
