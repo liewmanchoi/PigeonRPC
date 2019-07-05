@@ -2,7 +2,9 @@ package com.liewmanchoi.pigeon.rpc.config;
 
 import com.liewmanchoi.pigeon.rpc.cluster.api.FaultToleranceHandler;
 import com.liewmanchoi.pigeon.rpc.cluster.api.LoadBalancer;
+import com.liewmanchoi.pigeon.rpc.executor.api.PigeonExecutor;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.Protocol;
+import com.liewmanchoi.pigeon.rpc.proxy.api.ProxyFactory;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceRegistry;
 import com.liewmanchoi.pigeon.rpc.serialization.api.Serializer;
 import lombok.AllArgsConstructor;
@@ -21,36 +23,44 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class GlobalConfig {
-    private ApplicationConfig applicationConfig;
-    private RegistryConfig registryConfig;
-    private ProtocolConfig protocolConfig;
-    private ClusterConfig clusterConfig;
+  private ApplicationConfig applicationConfig;
+  private RegistryConfig registryConfig;
+  private ProtocolConfig protocolConfig;
+  private ClusterConfig clusterConfig;
 
-    // TODO: GlobalConfig待完成
+  public Serializer getSerializer() {
+    return applicationConfig.getSerializerInstance();
+  }
 
-    public Serializer getSerializer() {
-        // TODO: getSerializer()
-        return null;
-    }
+  public ProxyFactory getProxyFactory() {
+    return applicationConfig.getProxyFactoryInstance();
+  }
 
-    public int getPort() {
-        // TODO: getPort()
-        return 0;
-    }
+  public int getPort() {
+    return protocolConfig.getPort();
+  }
 
-    public ServiceRegistry getServiceRegistry() {
-        return registryConfig.getRegistryInstance();
-    }
+  public ServiceRegistry getServiceRegistry() {
+    return registryConfig.getRegistryInstance();
+  }
 
-    public Protocol getProtocol() {
-        return protocolConfig.getProtocolInstance();
-    }
+  public Protocol getProtocol() {
+    return protocolConfig.getProtocolInstance();
+  }
 
-    public LoadBalancer getLoadBalancer() {
-        return clusterConfig.getLoadBalancerInstance();
-    }
+  public LoadBalancer getLoadBalancer() {
+    return clusterConfig.getLoadBalancerInstance();
+  }
 
-    public FaultToleranceHandler getFaultToleranceHandler() {
-        return clusterConfig.getFaultToleranceHandlerInstance();
-    }
+  public FaultToleranceHandler getFaultToleranceHandler() {
+    return clusterConfig.getFaultToleranceHandlerInstance();
+  }
+
+  public PigeonExecutor getClientExecutor() {
+    return protocolConfig.getClientExecutor();
+  }
+
+  public PigeonExecutor getServerExecutor() {
+    return protocolConfig.getServerExecutor();
+  }
 }

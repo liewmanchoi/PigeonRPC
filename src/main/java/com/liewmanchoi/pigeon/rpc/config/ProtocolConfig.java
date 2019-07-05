@@ -26,7 +26,7 @@ public class ProtocolConfig {
   private PigeonExecutor clientExecutor;
   private PigeonExecutor serverExecutor;
 
-  private int getPort() {
+  public int getPort() {
     if (port != 0) {
       return port;
     }
