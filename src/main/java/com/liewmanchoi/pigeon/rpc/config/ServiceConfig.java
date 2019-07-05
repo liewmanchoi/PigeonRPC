@@ -21,7 +21,8 @@ public class ServiceConfig<T> extends AbstractConfig {
   private Exporter<T> exporter;
 
   public void export() {
-      Invoker<T> invoker = getApplicationConfig().getProxyFactoryInstance().getInvoker(reference, interfaceClass);
-      exporter = getProtocolConfig().getProtocolInstance().export(invoker, this);
+    Invoker<T> invoker =
+        getApplicationConfig().getProxyFactoryInstance().getInvoker(reference, interfaceClass);
+    exporter = getProtocolConfig().getProtocolInstance().export(invoker, this);
   }
 }
