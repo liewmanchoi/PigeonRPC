@@ -66,7 +66,11 @@ public enum ErrorEnum {
     /**
      * 服务发现故障
      */
-    SERVICE_DISCOVER_FAILURE("服务发现故障");
+    SERVICE_DISCOVER_FAILURE("服务发现故障"),
+    /**
+     * 泛化调用错误
+     */
+    GENERIC_INVOCATION_ERROR("泛化调用错误");
 
     private @Getter String errorCode;
 
