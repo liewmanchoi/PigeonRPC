@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ApplicationConfig {
-    private String name;
-    private String serialize;
-    private String proxy;
+  private String name;
+  private String serialize;
+  private String proxy;
 
-    private Serializer serializerInstance;
-    private ProxyFactory proxyFactoryInstance;
+  private Serializer serializerInstance;
+  private ProxyFactory proxyFactoryInstance;
 }

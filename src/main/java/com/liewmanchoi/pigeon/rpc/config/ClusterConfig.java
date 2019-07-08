@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClusterConfig {
-    private String loadBalancer;
-    private String faultTolerance;
-    private LoadBalancer loadBalancerInstance;
-    private FaultToleranceHandler faultToleranceHandlerInstance;
+  private String loadBalancer;
+  private String faultTolerance;
+  private LoadBalancer loadBalancerInstance;
+  private FaultToleranceHandler faultToleranceHandlerInstance;
 }
