@@ -9,6 +9,7 @@ import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.common.utils.GlobalRecycler;
 import com.liewmanchoi.pigeon.rpc.filter.Filter;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -34,6 +35,7 @@ public class ReferenceConfig<T> extends AbstractConfig {
   private static final Map<String, ReferenceConfig<?>> REFERENCE_CONFIG_MAP =
       new ConcurrentHashMap<>();
 
+  private String interfaceName;
   private Class<T> interfaceClass;
   private long timeout;
   private InvokeMode invokeMode;
@@ -49,12 +51,12 @@ public class ReferenceConfig<T> extends AbstractConfig {
 
   @SuppressWarnings("unchecked")
   public static <T> ReferenceConfig<T> createReferenceConfig(
+      String interfaceName,
       Class<T> interfaceClass,
       InvokeMode invokeMode,
       long timeout,
       boolean isGeneric,
       List<Filter> filters) {
-    String interfaceName = interfaceClass.getName();
     if (REFERENCE_CONFIG_MAP.containsKey(interfaceName)) {
       return (ReferenceConfig<T>) REFERENCE_CONFIG_MAP.get(interfaceName);
     }
@@ -62,11 +64,12 @@ public class ReferenceConfig<T> extends AbstractConfig {
     ReferenceConfig<T> config =
         (ReferenceConfig<T>)
             ReferenceConfig.builder()
+                .interfaceName(interfaceName)
                 .interfaceClass((Class<Object>) interfaceClass)
                 .timeout(timeout)
                 .invokeMode(invokeMode)
                 .isGeneric(isGeneric)
-                .filters(filters)
+                .filters(filters != null ? filters : new ArrayList<>())
                 .build();
     REFERENCE_CONFIG_MAP.put(interfaceName, config);
     return config;
@@ -124,20 +127,20 @@ public class ReferenceConfig<T> extends AbstractConfig {
     }
 
     if (isGeneric) {
-      RPCRequest rpcRequest = GlobalRecycler.reuse(RPCRequest.class);
+      RPCRequest request = GlobalRecycler.reuse(RPCRequest.class);
       String interfaceName = interfaceClass.getName();
       log.info("发起泛化调用，接口名[{}]，方法名[{}]", interfaceName, methodName);
 
       // 设置request内容
-      rpcRequest.setRequestId(UUID.randomUUID().toString());
-      rpcRequest.setInterfaceName(interfaceName);
-      rpcRequest.setMethodName(methodName);
-      rpcRequest.setArgTypes(argTypes);
-      rpcRequest.setArgs(args);
+      request.setRequestId(UUID.randomUUID().toString());
+      request.setInterfaceName(interfaceName);
+      request.setMethodName(methodName);
+      request.setArgTypes(argTypes);
+      request.setArgs(args);
 
-      RPCRequestWrapper rpcRequestWrapper =
-          RPCRequestWrapper.builder().rpcRequest(rpcRequest).referenceConfig(this).build();
-      RPCResponse response = invoker.invoke(rpcRequestWrapper);
+      RPCRequestWrapper requestWrapper =
+          RPCRequestWrapper.builder().rpcRequest(request).referenceConfig(this).build();
+      RPCResponse response = invoker.invoke(requestWrapper);
       if (response == null) {
         return null;
       }
