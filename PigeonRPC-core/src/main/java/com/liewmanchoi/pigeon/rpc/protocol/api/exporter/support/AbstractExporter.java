@@ -11,11 +11,12 @@ import lombok.Setter;
  * @date 2019/6/30
  */
 public abstract class AbstractExporter<T> implements Exporter<T> {
-    @Getter
-    @Setter
-    protected Invoker<T> invoker;
 
-    @Getter
-    @Setter
-    protected ServiceConfig<T> serviceConfig;
+  @Getter
+  @Setter
+  protected Invoker<T> invoker;
+
+  @Getter
+  @Setter
+  protected ServiceConfig<T> serviceConfig;
 }

@@ -14,29 +14,33 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class InvocationSupport {
-    private static class OnewayHolder {
-        private static OneWayInvocation instance = new OneWayInvocation();
-    }
 
-    private static class AsyncHolder {
-        private static AsyncInvocation instance = new AsyncInvocation();
+  public static Invocation getInvocation(InvokeMode invokeMode) {
+    switch (invokeMode) {
+      case SYNC:
+        return SyncHolder.instance;
+      case ASYNC:
+        return AsyncHolder.instance;
+      case ONEWAY:
+        return OnewayHolder.instance;
+      default:
+        log.error("非法调用类型参数[{}]", invokeMode);
+        throw new RPCException(ErrorEnum.ILLEGAL_INVOCATION_TYPE, "非法调用类型", invokeMode);
     }
+  }
 
-    private static class SyncHolder {
-        private static SyncInvocation instance = new SyncInvocation();
-    }
+  private static class OnewayHolder {
 
-    public static Invocation getInvocation(InvokeMode invokeMode) {
-        switch (invokeMode) {
-            case SYNC:
-                return SyncHolder.instance;
-            case ASYNC:
-                return AsyncHolder.instance;
-            case ONEWAY:
-                return OnewayHolder.instance;
-            default:
-                log.error("非法调用类型参数[{}]", invokeMode);
-                throw new RPCException(ErrorEnum.ILLEGAL_INVOCATION_TYPE, "非法调用类型", invokeMode);
-        }
-    }
+    private static OneWayInvocation instance = new OneWayInvocation();
+  }
+
+  private static class AsyncHolder {
+
+    private static AsyncInvocation instance = new AsyncInvocation();
+  }
+
+  private static class SyncHolder {
+
+    private static SyncInvocation instance = new SyncInvocation();
+  }
 }

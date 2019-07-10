@@ -16,22 +16,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 public class ClientMessageHandler extends ChannelInboundHandlerAdapter {
-    private Client client;
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        Message message = (Message) msg;
-        log.info("接收到服务器-{} 响应-{}", client.getServiceURL().getAddress(), message);
+  private Client client;
 
-        // 消息类型
-        byte type = message.getType();
-        // 约定：服务器不会PING客户端
-        if (type == Message.PONG) {
-            log.info("收到服务器PONG响应消息");
-        } else if (type == Message.RESPONSE) {
-            client.handleRPCResponse(message.getRpcResponse());
-        }
+  @Override
+  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    Message message = (Message) msg;
+    log.info("接收到服务器-{} 响应-{}", client.getServiceURL().getAddress(), message);
 
-        super.channelRead(ctx, msg);
+    // 消息类型
+    byte type = message.getType();
+    // 约定：服务器不会PING客户端
+    if (type == Message.PONG) {
+      log.info("收到服务器PONG响应消息");
+    } else if (type == Message.RESPONSE) {
+      client.handleRPCResponse(message.getRpcResponse());
     }
+
+    super.channelRead(ctx, msg);
+  }
 }

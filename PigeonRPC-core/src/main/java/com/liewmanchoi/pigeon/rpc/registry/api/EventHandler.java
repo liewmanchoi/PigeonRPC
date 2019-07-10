@@ -6,6 +6,8 @@ package com.liewmanchoi.pigeon.rpc.registry.api;
  */
 public interface EventHandler {
   void add(ServiceURL serviceURL);
+
   void update(ServiceURL serviceURL);
+
   void remove(ServiceURL serviceURL);
 }

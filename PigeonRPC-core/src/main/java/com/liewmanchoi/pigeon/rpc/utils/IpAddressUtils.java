@@ -1,20 +1,19 @@
 package com.liewmanchoi.pigeon.rpc.utils;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author wangsheng
  * @date 2019/6/24
  */
-
 @Slf4j
 public class IpAddressUtils {
+
     public static String getIpAddress() {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -26,7 +25,7 @@ public class IpAddressUtils {
                 }
 
                 Enumeration<InetAddress> addresses = nextElement.getInetAddresses();
-                while(addresses.hasMoreElements()) {
+                while (addresses.hasMoreElements()) {
                     InetAddress addr = addresses.nextElement();
 
                     // *EDIT*

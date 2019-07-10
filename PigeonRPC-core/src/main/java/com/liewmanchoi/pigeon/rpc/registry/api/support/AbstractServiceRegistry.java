@@ -9,6 +9,7 @@ import lombok.Setter;
  * @date 2019/7/3
  */
 public abstract class AbstractServiceRegistry implements ServiceRegistry {
-    @Setter
-    protected RegistryConfig registryConfig;
+
+  @Setter
+  protected RegistryConfig registryConfig;
 }

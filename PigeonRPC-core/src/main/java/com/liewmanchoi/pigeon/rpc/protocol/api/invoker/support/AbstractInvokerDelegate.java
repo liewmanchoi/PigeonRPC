@@ -9,53 +9,54 @@ import lombok.Getter;
  * @date 2019/6/30
  */
 public abstract class AbstractInvokerDelegate<T> extends AbstractInvoker<T> {
-    @Getter
-    private Invoker<T> delegate;
 
-    public AbstractInvokerDelegate(Invoker<T> delegate) {
-        this.delegate = delegate;
+  @Getter
+  private Invoker<T> delegate;
+
+  public AbstractInvokerDelegate(Invoker<T> delegate) {
+    this.delegate = delegate;
+  }
+
+  @Override
+  public int hashCode() {
+    return delegate.getInterface().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
     }
 
-    @Override
-    public int hashCode() {
-        return delegate.getInterface().hashCode();
+    if (obj == this) {
+      return true;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-
-        if (obj == this) {
-            return true;
-        }
-
-        if (!(obj instanceof Invoker)) {
-            return false;
-        }
-
-        Invoker<?> other = (Invoker) obj;
-        return delegate.getInterface().equals(other.getInterface());
+    if (!(obj instanceof Invoker)) {
+      return false;
     }
 
-    @Override
-    public boolean isAvailable() {
-        return delegate.isAvailable();
-    }
+    Invoker<?> other = (Invoker) obj;
+    return delegate.getInterface().equals(other.getInterface());
+  }
 
-    @Override
-    public Class<T> getInterface() {
-        return delegate.getInterface();
-    }
+  @Override
+  public boolean isAvailable() {
+    return delegate.isAvailable();
+  }
 
-    @Override
-    public String getInterfaceName() {
-        return delegate.getInterfaceName();
-    }
+  @Override
+  public Class<T> getInterface() {
+    return delegate.getInterface();
+  }
 
-    @Override
-    public ServiceURL getServiceURL() {
-        return delegate.getServiceURL();
-    }
+  @Override
+  public String getInterfaceName() {
+    return delegate.getInterfaceName();
+  }
+
+  @Override
+  public ServiceURL getServiceURL() {
+    return delegate.getServiceURL();
+  }
 }

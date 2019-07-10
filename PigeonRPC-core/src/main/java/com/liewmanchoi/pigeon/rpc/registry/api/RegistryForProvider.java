@@ -7,10 +7,12 @@ import com.liewmanchoi.pigeon.rpc.protocol.ProviderInfo;
  * @date 2019/6/22
  */
 public interface RegistryForProvider {
-    /**
-     * 向注册中心注册服务提供者信息
-     * @param providerInfo 服务提供者信息
-     * @exception Exception 异常
-     */
-    void registerProvider(final ProviderInfo providerInfo) throws Exception;
+
+  /**
+   * 向注册中心注册服务提供者信息
+   *
+   * @param providerInfo 服务提供者信息
+   * @throws Exception 异常
+   */
+  void registerProvider(final ProviderInfo providerInfo) throws Exception;
 }

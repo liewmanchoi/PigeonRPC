@@ -9,6 +9,7 @@ import lombok.Getter;
  * @date 2019/6/26
  */
 public class RPCException extends RuntimeException {
+
     @Getter
     private ErrorEnum errorEnum;
 

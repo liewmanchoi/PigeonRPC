@@ -11,9 +11,11 @@ import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
  * @date 2019/7/3
  */
 public class FailOverHandler implements FaultToleranceHandler {
-    @Override
-    public RPCResponse handle(ClusterInvoker clusterInvoker, RPCRequestWrapper rpcRequestWrapper, RPCException exception) {
-        // TODO: handle()
-        return null;
-    }
+
+  @Override
+  public RPCResponse handle(
+      ClusterInvoker clusterInvoker, RPCRequestWrapper rpcRequestWrapper, RPCException exception) {
+    // TODO: handle()
+    return null;
+  }
 }

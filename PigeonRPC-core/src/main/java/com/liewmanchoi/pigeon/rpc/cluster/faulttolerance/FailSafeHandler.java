@@ -13,10 +13,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class FailSafeHandler implements FaultToleranceHandler {
-    @Override
-    public RPCResponse handle(ClusterInvoker clusterInvoker, RPCRequestWrapper rpcRequestWrapper, RPCException exception) {
-        log.error("requestId为[{}]的调用失败，启用FailSafe策略，错误为[{}]", rpcRequestWrapper.getRpcRequest().getRequestId(),
-                exception);
-        return null;
-    }
+
+  @Override
+  public RPCResponse handle(
+      ClusterInvoker clusterInvoker, RPCRequestWrapper rpcRequestWrapper, RPCException exception) {
+    log.error(
+        "requestId为[{}]的调用失败，启用FailSafe策略，错误为[{}]",
+        rpcRequestWrapper.getRpcRequest().getRequestId(),
+        exception);
+    return null;
+  }
 }

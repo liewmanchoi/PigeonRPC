@@ -12,5 +12,7 @@ import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
  * @date 2019/7/2
  */
 public interface FaultToleranceHandler {
-    RPCResponse handle(ClusterInvoker clusterInvoker, RPCRequestWrapper rpcRequestWrapper, RPCException exception);
+
+  RPCResponse handle(
+      ClusterInvoker clusterInvoker, RPCRequestWrapper rpcRequestWrapper, RPCException exception);
 }

@@ -17,55 +17,57 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RPCRequestWrapper {
-    private ReferenceConfig<?> referenceConfig;
-    private RPCRequest rpcRequest;
-    /**
-     * getInterfaceName
-     *
-     * @return java.lang.String
-     * @date 2019/6/26
-     */
-    String getInterfaceName() {
-        return rpcRequest.getInterfaceName();
-    }
 
-    /**
-     * getMethodName
-     *
-     * @return java.lang.String
-     * @date 2019/6/26
-     */
-    String getMethodName() {
-        return rpcRequest.getMethodName();
-    }
+  private ReferenceConfig<?> referenceConfig;
+  private RPCRequest rpcRequest;
 
-    /**
-     * getArgTypes
-     *
-     * @return java.lang.Class<?>[]
-     * @date 2019/6/26
-     */
-    Class<?>[] getArgTypes() {
-        return rpcRequest.getArgTypes();
-    }
+  /**
+   * getInterfaceName
+   *
+   * @return java.lang.String
+   * @date 2019/6/26
+   */
+  String getInterfaceName() {
+    return rpcRequest.getInterfaceName();
+  }
 
-    /**
-     * getArgs
-     *
-     * @return java.lang.Object[]
-     * @date 2019/6/26
-     */
-    Object[] getArgs() {
-        return rpcRequest.getArgs();
-    }
-    
-    /**
-     * getRequestId
-     *
-     * @return java.lang.String
-     * @date 2019/6/26
-     */
-    String getRequestId() {
-        return rpcRequest.getRequestId();
-    }
+  /**
+   * getMethodName
+   *
+   * @return java.lang.String
+   * @date 2019/6/26
+   */
+  String getMethodName() {
+    return rpcRequest.getMethodName();
+  }
+
+  /**
+   * getArgTypes
+   *
+   * @return java.lang.Class<?>[]
+   * @date 2019/6/26
+   */
+  Class<?>[] getArgTypes() {
+    return rpcRequest.getArgTypes();
+  }
+
+  /**
+   * getArgs
+   *
+   * @return java.lang.Object[]
+   * @date 2019/6/26
+   */
+  Object[] getArgs() {
+    return rpcRequest.getArgs();
+  }
+
+  /**
+   * getRequestId
+   *
+   * @return java.lang.String
+   * @date 2019/6/26
+   */
+  String getRequestId() {
+    return rpcRequest.getRequestId();
+  }
 }

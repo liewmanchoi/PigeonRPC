@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
   <artifactId>PigeonRPC-core</artifactId>
+  <dependencies>
+    <dependency>
+      <artifactId>protostuff-core</artifactId>
+      <groupId>io.protostuff</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>protostuff-runtime</artifactId>
+      <groupId>io.protostuff</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
+    <dependency>
+      <artifactId>objenesis</artifactId>
+      <groupId>org.objenesis</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+    <dependency>
+      <artifactId>netty-all</artifactId>
+      <groupId>io.netty</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+      <artifactId>lombok</artifactId>
+      <groupId>org.projectlombok</groupId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <artifactId>curator-framework</artifactId>
+      <groupId>org.apache.curator</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-recipes -->
+    <dependency>
+      <artifactId>curator-recipes</artifactId>
+      <groupId>org.apache.curator</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2 -->
+    <dependency>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
+    <dependency>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+    </dependency>
+  </dependencies>
 
+  <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.liewmanchoi</groupId>
     <artifactId>PigeonRPC</artifactId>
+    <groupId>com.liewmanchoi</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <dependencies>
-  <dependency>
-    <artifactId>protostuff-core</artifactId>
-    <groupId>io.protostuff</groupId>
-  </dependency>
-  <dependency>
-    <artifactId>protostuff-runtime</artifactId>
-    <groupId>io.protostuff</groupId>
-  </dependency>
-  <!-- https://mvnrepository.com/artifact/org.objenesis/objenesis -->
-  <dependency>
-    <artifactId>objenesis</artifactId>
-    <groupId>org.objenesis</groupId>
-  </dependency>
-  <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
-  <dependency>
-    <artifactId>netty-all</artifactId>
-    <groupId>io.netty</groupId>
-  </dependency>
-  <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
-  <dependency>
-    <artifactId>lombok</artifactId>
-    <groupId>org.projectlombok</groupId>
-    <scope>provided</scope>
-  </dependency>
-  <dependency>
-    <artifactId>curator-framework</artifactId>
-    <groupId>org.apache.curator</groupId>
-  </dependency>
-  <!-- https://mvnrepository.com/artifact/org.apache.curator/curator-recipes -->
-  <dependency>
-    <artifactId>curator-recipes</artifactId>
-    <groupId>org.apache.curator</groupId>
-  </dependency>
-  <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j2 -->
-  <dependency>
-    <artifactId>spring-boot-starter-log4j2</artifactId>
-    <groupId>org.springframework.boot</groupId>
-  </dependency>
-  <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
-  <dependency>
-    <artifactId>jackson-dataformat-yaml</artifactId>
-    <groupId>com.fasterxml.jackson.dataformat</groupId>
-  </dependency>
-  </dependencies>
 </project>

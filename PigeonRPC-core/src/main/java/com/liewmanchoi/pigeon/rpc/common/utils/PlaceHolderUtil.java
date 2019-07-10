@@ -2,7 +2,6 @@ package com.liewmanchoi.pigeon.rpc.common.utils;
 
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -11,8 +10,9 @@ import java.util.regex.Pattern;
  * @date 2018/7/21
  */
 public class PlaceHolderUtil {
+
     private static final Pattern REGEX = Pattern.compile("\\{(.*?)}");
-    
+
     public static String replace(String message, Object... args) {
         Matcher matcher = REGEX.matcher(message);
         StringBuffer sb = new StringBuffer();
@@ -22,14 +22,17 @@ public class PlaceHolderUtil {
             // scope值为requestScope,sessionScope,applicationScope
             String placeHolder = matcher.group(1);
             if (index >= args.length) {
-                throw new RPCException(ErrorEnum.TEMPLATE_REPLACEMENT_ERROR,"自定义RPCException消息模板替换出错, placeHolder:{}", placeHolder);
+                throw new RPCException(
+                    ErrorEnum.TEMPLATE_REPLACEMENT_ERROR,
+                    "自定义RPCException消息模板替换出错, placeHolder:{}",
+                    placeHolder);
             }
             Object value = args[index++];
             // 如果解析得到的值为null，则将占位符去掉；否则将占位符替换为值
             if (value == null) {
                 matcher.appendReplacement(sb, "");
             } else {
-                //把group(1)得到的数据，替换为value
+                // 把group(1)得到的数据，替换为value
                 matcher.appendReplacement(sb, value.toString());
             }
         }

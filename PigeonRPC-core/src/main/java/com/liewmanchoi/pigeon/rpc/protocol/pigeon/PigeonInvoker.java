@@ -13,11 +13,12 @@ import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.support.AbstractRemoteInv
  * @date 2019/6/30
  */
 public class PigeonInvoker<T> extends AbstractRemoteInvoker<T> {
-    @Override
-    public RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException {
-        InvokeMode invokeMode = rpcRequestWrapper.getReferenceConfig().getInvokeMode();
-        Invocation invocation = InvocationSupport.getInvocation(invokeMode);
 
-        return invocation.invoke(rpcRequestWrapper, (rpcRequest) -> getClient().submit(rpcRequest));
-    }
+  @Override
+  public RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException {
+    InvokeMode invokeMode = rpcRequestWrapper.getReferenceConfig().getInvokeMode();
+    Invocation invocation = InvocationSupport.getInvocation(invokeMode);
+
+    return invocation.invoke(rpcRequestWrapper, (rpcRequest) -> getClient().submit(rpcRequest));
+  }
 }

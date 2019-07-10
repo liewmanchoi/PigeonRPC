@@ -4,10 +4,9 @@ import com.liewmanchoi.pigeon.rpc.cluster.api.support.AbstractLoadBalancer;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 带权随机软负载均衡器 <br>
@@ -19,22 +18,28 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @Slf4j
 public class WeightedRandomLoadBalancer extends AbstractLoadBalancer {
-    @Override
-    protected Invoker<?> doSelect(List<Invoker> invokers, RPCRequest request) {
-        // 求出所有Invoker的权重之和
-        int weightSum = invokers.stream().
-                mapToInt(invoker -> Integer.parseInt(invoker.getServiceURL().get(ServiceURL.Key.WEIGHT).get(0))).sum();
-        // 使用ThreadLocalRandom获取区间[0, weightedSum)之间的随机值
-        int randomValue = ThreadLocalRandom.current().nextInt(weightSum);
 
-        for (Invoker invoker : invokers) {
-            int currentWeight = Integer.parseInt(invoker.getServiceURL().get(ServiceURL.Key.WEIGHT).get(0));
-            randomValue -= currentWeight;
+  @Override
+  protected Invoker<?> doSelect(List<Invoker> invokers, RPCRequest request) {
+    // 求出所有Invoker的权重之和
+    int weightSum =
+        invokers.stream()
+            .mapToInt(
+                invoker ->
+                    Integer.parseInt(invoker.getServiceURL().get(ServiceURL.Key.WEIGHT).get(0)))
+            .sum();
+    // 使用ThreadLocalRandom获取区间[0, weightedSum)之间的随机值
+    int randomValue = ThreadLocalRandom.current().nextInt(weightSum);
 
-            if (randomValue < 0) {
-                return invoker;
-            }
-        }
-        return null;
+    for (Invoker invoker : invokers) {
+      int currentWeight =
+          Integer.parseInt(invoker.getServiceURL().get(ServiceURL.Key.WEIGHT).get(0));
+      randomValue -= currentWeight;
+
+      if (randomValue < 0) {
+        return invoker;
+      }
     }
+    return null;
+  }
 }
