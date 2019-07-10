@@ -30,8 +30,6 @@ public class ClientMessageHandler extends ChannelInboundHandlerAdapter {
             log.info("收到服务器PONG响应消息");
         } else if (type == Message.RESPONSE) {
             client.handleRPCResponse(message.getRpcResponse());
-        } else if (type == Message.REQUEST) {
-            client.handleCallbackRequest(message.getRpcRequest(), ctx);
         }
 
         super.channelRead(ctx, msg);

@@ -34,12 +34,6 @@ import java.util.concurrent.*;
  */
 @Slf4j
 public abstract class AbstractClient implements Client {
-    // TODO: 使用EventLoop.schedule()进行调度
-    /**
-     * 延时任务调度线程池（线程池中只有一个线程）
-     */
-    private static ScheduledExecutorService retryExecutor = Executors.newSingleThreadScheduledExecutor();
-
     @Getter
     private ServiceURL serviceURL;
 
@@ -231,7 +225,8 @@ public abstract class AbstractClient implements Client {
                     // 开始进行无限次重连尝试
                     log.warn("建立重连失败，{}秒后开始重试", PigeonConstant.HEART_BEAT_TIME_OUT);
                     // 利用延时任务调度线程池开始周期性任务调度
-                    retryExecutor.schedule(connectionRetry, PigeonConstant.HEART_BEAT_TIME_OUT, TimeUnit.SECONDS);
+                    final EventLoop loop = futureChannel.eventLoop();
+                    loop.schedule(connectionRetry, PigeonConstant.HEART_BEAT_TIME_OUT, TimeUnit.SECONDS);
                 }
             } else {
                 log.info("外部服务器已经关闭，无法进行重连操作...");
