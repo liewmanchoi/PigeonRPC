@@ -1,6 +1,7 @@
 package com.liewmanchoi.pigeon.rpc.common;
 
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
+import com.liewmanchoi.pigeon.rpc.common.enumeration.support.ExtensionBaseType;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import java.io.BufferedReader;
 import java.io.File;
@@ -115,9 +116,14 @@ public class ExtensionLoader {
     return instances;
   }
 
+  @SuppressWarnings("unchecked")
   public <T, K extends Enum<K>> T load(Class<T> interfaceClass, Class<K> enumType, String name) {
-    //    ExtensionBaseType<T> extensionBaseType = (ExtensionBaseType<T>)
-    // ExtensionBaseType.valueOf(enumType, name.toUpperCase());
+    ExtensionBaseType<T> extensionBaseType =
+        (ExtensionBaseType<T>) ExtensionBaseType.valueOf(enumType, name.toUpperCase());
+
+    if (extensionBaseType != null) {
+      return extensionBaseType.getInstance();
+    }
 
     String interfaceName = interfaceClass.getName();
     if (!extensionMap.containsKey(interfaceName)
