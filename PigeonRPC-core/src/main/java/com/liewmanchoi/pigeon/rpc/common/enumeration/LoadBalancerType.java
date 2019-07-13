@@ -12,7 +12,7 @@ import com.liewmanchoi.pigeon.rpc.common.enumeration.support.ExtensionBaseType;
  * @author wangsheng
  * @date 2019/7/13
  */
-public enum LoadBalancerType implements ExtensionBaseType {
+public enum LoadBalancerType implements ExtensionBaseType<LoadBalancer> {
   /**
    * LeastActive
    */
@@ -41,7 +41,7 @@ public enum LoadBalancerType implements ExtensionBaseType {
   }
 
   @Override
-  public Object getInstance() {
+  public LoadBalancer getInstance() {
     return loadBalancer;
   }
 }
