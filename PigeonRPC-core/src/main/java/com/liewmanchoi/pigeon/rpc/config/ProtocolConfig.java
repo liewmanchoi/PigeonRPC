@@ -1,6 +1,5 @@
 package com.liewmanchoi.pigeon.rpc.config;
 
-import com.liewmanchoi.pigeon.rpc.executor.api.PigeonExecutor;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.Protocol;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +22,8 @@ public class ProtocolConfig {
   private int port;
 
   private Protocol protocolInstance;
-  private PigeonExecutor clientExecutor;
-  private PigeonExecutor serverExecutor;
+  private ExecutorConfig clientConfig;
+  private ExecutorConfig serverConfig;
 
   public int getPort() {
     if (port != 0) {
@@ -36,7 +35,7 @@ public class ProtocolConfig {
 
   public void close() {
     protocolInstance.destroy();
-    clientExecutor.close();
-    serverExecutor.close();
+    clientConfig.close();
+    serverConfig.close();
   }
 }
