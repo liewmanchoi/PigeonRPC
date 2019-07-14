@@ -5,13 +5,12 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author wangsheng
  * @date 2019/6/24
  */
-@Slf4j
+//@Slf4j
 public class IpAddressUtils {
 
     public static String getIpAddress() {
@@ -37,7 +36,7 @@ public class IpAddressUtils {
                 }
             }
         } catch (SocketException e) {
-            log.error("failed to get IP address: ", e);
+//            log.error("failed to get IP address: ", e);
             throw new RuntimeException(e);
         }
 
