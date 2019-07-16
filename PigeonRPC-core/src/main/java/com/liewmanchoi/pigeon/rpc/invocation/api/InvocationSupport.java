@@ -1,7 +1,7 @@
 package com.liewmanchoi.pigeon.rpc.invocation.api;
 
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
-import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeMode;
+import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeType;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.invocation.async.AsyncInvocation;
 import com.liewmanchoi.pigeon.rpc.invocation.oneway.OneWayInvocation;
@@ -15,8 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class InvocationSupport {
 
-  public static Invocation getInvocation(InvokeMode invokeMode) {
-    switch (invokeMode) {
+  public static Invocation getInvocation(InvokeType invokeType) {
+    switch (invokeType) {
       case SYNC:
         return SyncHolder.instance;
       case ASYNC:
@@ -24,8 +24,8 @@ public class InvocationSupport {
       case ONEWAY:
         return OnewayHolder.instance;
       default:
-        log.error("非法调用类型参数[{}]", invokeMode);
-        throw new RPCException(ErrorEnum.ILLEGAL_INVOCATION_TYPE, "非法调用类型", invokeMode);
+        log.error("非法调用类型参数[{}]", invokeType);
+        throw new RPCException(ErrorEnum.ILLEGAL_INVOCATION_TYPE, "非法调用类型", invokeType);
     }
   }
 

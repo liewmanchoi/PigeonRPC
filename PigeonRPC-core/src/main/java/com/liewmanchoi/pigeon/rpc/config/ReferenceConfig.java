@@ -4,7 +4,7 @@ import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
-import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeMode;
+import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeType;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.common.utils.GlobalRecycler;
 import com.liewmanchoi.pigeon.rpc.filter.Filter;
@@ -38,7 +38,7 @@ public class ReferenceConfig<T> extends AbstractConfig {
   private String interfaceName;
   private Class<T> interfaceClass;
   private long timeout;
-  private InvokeMode invokeMode;
+  private InvokeType invokeType;
 
   private List<Filter> filters;
   /** 是否为泛化调用 */
@@ -53,7 +53,7 @@ public class ReferenceConfig<T> extends AbstractConfig {
   public static <T> ReferenceConfig<T> createReferenceConfig(
       String interfaceName,
       Class<T> interfaceClass,
-      InvokeMode invokeMode,
+      InvokeType invokeType,
       long timeout,
       boolean isGeneric,
       List<Filter> filters) {
@@ -67,7 +67,7 @@ public class ReferenceConfig<T> extends AbstractConfig {
                 .interfaceName(interfaceName)
                 .interfaceClass((Class<Object>) interfaceClass)
                 .timeout(timeout)
-                .invokeMode(invokeMode)
+                .invokeType(invokeType)
                 .isGeneric(isGeneric)
                 .filters(filters != null ? filters : new ArrayList<>())
                 .build();

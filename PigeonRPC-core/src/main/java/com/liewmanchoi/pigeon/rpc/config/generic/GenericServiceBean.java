@@ -1,7 +1,7 @@
 package com.liewmanchoi.pigeon.rpc.config.generic;
 
 import com.liewmanchoi.pigeon.rpc.common.ExtensionLoader;
-import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeMode;
+import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeType;
 import com.liewmanchoi.pigeon.rpc.config.ApplicationConfig;
 import com.liewmanchoi.pigeon.rpc.config.ClusterConfig;
 import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
@@ -19,7 +19,7 @@ public class GenericServiceBean {
 
   public void init(
       String interfaceName,
-      InvokeMode invokeMode,
+      InvokeType invokeType,
       int timeOut,
       ApplicationConfig applicationConfig,
       ClusterConfig clusterConfig,
@@ -29,7 +29,7 @@ public class GenericServiceBean {
         ReferenceConfig.createReferenceConfig(
             interfaceName,
             null,
-            invokeMode,
+            invokeType,
             timeOut,
             true,
             ExtensionLoader.getInstance().load(Filter.class));

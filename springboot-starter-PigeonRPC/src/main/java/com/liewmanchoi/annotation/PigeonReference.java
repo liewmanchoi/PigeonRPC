@@ -1,6 +1,6 @@
 package com.liewmanchoi.annotation;
 
-import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeMode;
+import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PigeonReference {
 
-  InvokeMode invokeMode() default InvokeMode.ASYNC;
+  InvokeType invokeMode() default InvokeType.ASYNC;
 
   long timeout() default 3000;
 }
