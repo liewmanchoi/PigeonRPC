@@ -17,21 +17,13 @@ public enum LoadBalancerType implements ExtensionBaseType<LoadBalancer> {
    * LeastActive
    */
   LEAST_ACTIVE(new LeastActiveLoadBalancer()),
-  /**
-   * Random
-   */
+  /** Random */
   RANDOM(new RandomLoadBalancer()),
-  /**
-   * RoundRobin
-   */
+  /** RoundRobin */
   ROUND_ROBIN(new RoundRobinLoadBalancer()),
-  /**
-   * WeightedRandom
-   */
+  /** WeightedRandom */
   WEIGHTED_RANDOM(new WeightedRandomLoadBalancer()),
-  /**
-   * ConsistentHash
-   */
+  /** ConsistentHash */
   CONSISTENT_HASH(new ConsistentHashLoadBalancer());
 
   private LoadBalancer loadBalancer;

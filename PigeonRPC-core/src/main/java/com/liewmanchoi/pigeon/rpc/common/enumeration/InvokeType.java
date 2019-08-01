@@ -11,12 +11,8 @@ public enum InvokeType {
   ONEWAY,
   /** 同步调用 */
   SYNC,
-  /**
-   * 异步调用
-   */
+  /** 异步调用 */
   ASYNC,
-  /**
-   * 回调
-   */
+  /** 回调 */
   CALLBACK
 }

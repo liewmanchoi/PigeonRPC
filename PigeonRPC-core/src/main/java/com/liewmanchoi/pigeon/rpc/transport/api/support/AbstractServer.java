@@ -74,9 +74,7 @@ public abstract class AbstractServer implements Server {
         .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
         .option(ChannelOption.SO_BACKLOG, 128)
         .option(ChannelOption.SO_REUSEADDR, true)
-        //                .option(ChannelOption.SO_SNDBUF, 32 * 1024)
-        //                .option(ChannelOption.SO_RCVBUF, 32 * 1024)
-        .option(ChannelOption.TCP_NODELAY, true)
+        .childOption(ChannelOption.TCP_NODELAY, true)
         .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
     try {
@@ -85,9 +83,8 @@ public abstract class AbstractServer implements Server {
       channelFuture = serverBootstrap.bind(address, getGlobalConfig().getPort());
       // 添加回调通知
       channelFuture.addListener(
-          (ChannelFuture future) -> {
-            log.info("成功启动服务器，当前服务器类型-{}", this.getClass().getSimpleName());
-          });
+          (ChannelFuture future) -> log
+              .info("成功启动服务器，当前服务器类型-{}", this.getClass().getSimpleName()));
     } catch (Exception e) {
       log.error("服务器启动过程中发生异常", e);
     }

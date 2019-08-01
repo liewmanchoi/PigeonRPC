@@ -45,9 +45,7 @@ public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
       // 直接关闭连接
       ChannelFuture channelFuture = ctx.close();
       channelFuture.addListener(
-          (ChannelFuture future) -> {
-            log.info("服务端主动关闭连接");
-          });
+          (ChannelFuture future) -> log.info("服务端主动关闭连接"));
     }
   }
 }
