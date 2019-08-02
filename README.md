@@ -2,10 +2,15 @@
 分布式服务框架
 
 改造计划：先易后难
-- [ ] 增加Provider包，修改Server和Provider实现，每个Provider类对象持有一个Server对象；一台服务器实体对应一个Server类
-- [ ] 增加Consumer包
-  - 修改Client和Consumer实现，每个Consumer类对象持有一个Client对象；一个服务器实体对应一个Client类；也就是说：一个JVM中最多只有一个Server对象和一个Client对象
-  - 不同的调用方式应当使用专门的类进行解耦
-  - 生成代理对象，将调用替换成代理类对象的调用
-  - 负载均衡算法也在consumer侧实现
-  - `callback`方法暂缓实现
+[ ] 删除繁杂、冗余二而且令人头晕的`Config`类，公共配置内容（如注册中心地址）由yaml文件配置，其余配置项全部在注解里面解决
+  - 公共配置内容：
+      - zookeeper地址及其余配置项
+  - 个别配置内容：
+    - 调用类class对象
+    - 超时时间
+[ ] 删除扩展机制ExtensionLoader
+[ ] 删除Filter机制
+[ ] 改正错误百出的Invocation机制
+[ ] 坚决合并RPCRequest类与wrapper类
+[ ] 优化RPCContext
+[ ] 修改ServiceURL
