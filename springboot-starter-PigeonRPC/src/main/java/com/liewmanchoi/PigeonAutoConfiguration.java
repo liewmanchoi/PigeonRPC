@@ -20,10 +20,14 @@ import com.liewmanchoi.pigeon.rpc.config.RegistryConfig;
 import com.liewmanchoi.pigeon.rpc.executor.api.PigeonExecutor;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.support.AbstractProtocol;
 import com.liewmanchoi.pigeon.rpc.proxy.api.ProxyFactory;
+import com.liewmanchoi.pigeon.rpc.registry.api.ServiceRegistry;
 import com.liewmanchoi.pigeon.rpc.registry.zookeeper.ZookeeperServiceRegistry;
 import com.liewmanchoi.pigeon.rpc.serialization.api.Serializer;
 import com.liewmanchoi.processor.ConsumerBeanProcessor;
 import com.liewmanchoi.processor.ProviderBeanPostProcessor;
+import com.liewmanchoi.properties.ConsumerProperties;
+import com.liewmanchoi.properties.ProviderProperties;
+import com.liewmanchoi.properties.RegistryProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,28 +39,28 @@ import org.springframework.context.annotation.Configuration;
  * @author wangsheng
  * @date 2019/7/12
  */
-@EnableConfigurationProperties(value = PigeonProperties.class)
-@Configuration
 @Slf4j
+@Configuration
+@EnableConfigurationProperties(
+    value = {RegistryProperties.class, ProviderProperties.class, ConsumerProperties.class})
 public class PigeonAutoConfiguration implements InitializingBean {
 
-  @Autowired
-  private PigeonProperties pigeonProperties;
-  private ExtensionLoader extensionLoader;
+  //  @Autowired
+  //  private PigeonProperties pigeonProperties;
+  //  private ExtensionLoader extensionLoader;
+  @Autowired private RegistryProperties registryProperties;
+  @Autowired private ProviderProperties providerProperties;
+  @Autowired private ConsumerProperties consumerProperties;
 
   @Bean(initMethod = "init", destroyMethod = "close")
-  public RegistryConfig registryConfig() {
-    RegistryConfig registryConfig = pigeonProperties.getRegistryConfig();
-
-    if (registryConfig == null) {
-      log.error("没有配置RegistryConfig");
-      throw new RPCException(ErrorEnum.APP_CONFIG_FILE_ERROR, "没有配置RegistryConfig");
+  public ServiceRegistry serviceRegistry() {
+    String address = registryProperties.getAddress();
+    if (address == null || address.isEmpty()) {
+      log.error(">>>   必须配置服务发现地址   <<<");
+      throw new RuntimeException("没有配置服务发现地址");
     }
 
-    ZookeeperServiceRegistry registryInstance = new ZookeeperServiceRegistry(registryConfig);
-    registryConfig.setRegistryInstance(registryInstance);
-
-    return registryConfig;
+    return new ZookeeperServiceRegistry(address);
   }
 
   @Bean
@@ -124,24 +128,24 @@ public class PigeonAutoConfiguration implements InitializingBean {
       throw new RPCException(ErrorEnum.APP_CONFIG_FILE_ERROR, "没有配置ProtocolConfig");
     }
 
-    AbstractProtocol protocol = extensionLoader
-        .load(AbstractProtocol.class, ProtocolType.class, protocolConfig.getType());
-    protocol.init(GlobalConfig.builder()
-        .applicationConfig(applicationConfig)
-        .clusterConfig(clusterConfig)
-        .registryConfig(registryConfig)
-        .protocolConfig(protocolConfig)
-        .build());
+    AbstractProtocol protocol =
+        extensionLoader.load(AbstractProtocol.class, ProtocolType.class, protocolConfig.getType());
+    protocol.init(
+        GlobalConfig.builder()
+            .applicationConfig(applicationConfig)
+            .clusterConfig(clusterConfig)
+            .registryConfig(registryConfig)
+            .protocolConfig(protocolConfig)
+            .build());
     protocolConfig.setProtocolInstance(protocol);
 
-    ((AbstractLoadBalancer) clusterConfig.getLoadBalancerInstance()).updateGlobalConfig(
-        GlobalConfig.builder()
-            .protocolConfig(protocolConfig).build());
+    ((AbstractLoadBalancer) clusterConfig.getLoadBalancerInstance())
+        .updateGlobalConfig(GlobalConfig.builder().protocolConfig(protocolConfig).build());
 
     ExecutorConfig serverConfig = protocolConfig.getServerConfig();
     if (serverConfig != null) {
-      PigeonExecutor executor = extensionLoader
-          .load(PigeonExecutor.class, ExecutorType.class, serverConfig.getType());
+      PigeonExecutor executor =
+          extensionLoader.load(PigeonExecutor.class, ExecutorType.class, serverConfig.getType());
       executor.init(serverConfig.getThreads());
       serverConfig.setExecutorInstance(executor);
     }
