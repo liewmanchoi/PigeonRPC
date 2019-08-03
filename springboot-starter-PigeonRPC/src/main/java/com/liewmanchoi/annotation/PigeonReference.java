@@ -1,6 +1,7 @@
 package com.liewmanchoi.annotation;
 
-import com.liewmanchoi.pigeon.rpc.common.enumeration.InvokeType;
+import com.liewmanchoi.pigeon.rpc.common.enumeration.FaultToleranceType;
+import com.liewmanchoi.pigeon.rpc.common.enumeration.LoadBalancerType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,8 +16,30 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PigeonReference {
+  //  InvokeType invokeMode() default InvokeType.ASYNC;
 
-  InvokeType invokeMode() default InvokeType.ASYNC;
+  /**
+   * 服务提供者接口Class对象
+   */
+  Class<?> interfaceClass() default void.class;
 
+  /**
+   * 是否异步调用
+   */
+  boolean isAsync() default false;
+
+  /**
+   * 调用超时
+   */
   long timeout() default 3000;
+
+  /**
+   * 负载均衡方式
+   */
+  LoadBalancerType loadBalancer() default LoadBalancerType.RANDOM;
+
+  /**
+   * 容错模式
+   */
+  FaultToleranceType faultTolerance() default FaultToleranceType.FAIL_SAFE;
 }
