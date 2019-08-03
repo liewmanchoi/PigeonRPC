@@ -20,12 +20,15 @@ import com.liewmanchoi.pigeon.rpc.config.RegistryConfig;
 import com.liewmanchoi.pigeon.rpc.executor.api.PigeonExecutor;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.support.AbstractProtocol;
 import com.liewmanchoi.pigeon.rpc.proxy.api.ProxyFactory;
+import com.liewmanchoi.pigeon.rpc.proxy.jdk.JDKProxyFactory;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceRegistry;
 import com.liewmanchoi.pigeon.rpc.registry.zookeeper.ZookeeperServiceRegistry;
 import com.liewmanchoi.pigeon.rpc.serialization.api.Serializer;
+import com.liewmanchoi.pigeon.rpc.serialization.protostuff.ProtoStuffSerializer;
 import com.liewmanchoi.processor.ConsumerBeanProcessor;
 import com.liewmanchoi.processor.ProviderBeanPostProcessor;
 import com.liewmanchoi.properties.ConsumerProperties;
+import com.liewmanchoi.properties.ProtocolProperties;
 import com.liewmanchoi.properties.ProviderProperties;
 import com.liewmanchoi.properties.RegistryProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +53,9 @@ public class PigeonAutoConfiguration implements InitializingBean {
   //  private ExtensionLoader extensionLoader;
   @Autowired private RegistryProperties registryProperties;
   @Autowired private ProviderProperties providerProperties;
-  @Autowired private ConsumerProperties consumerProperties;
+  @Autowired(required = false) private ProtocolProperties protocolProperties;
 
+  /** 配置服务注册ServiceRegistry */
   @Bean(initMethod = "init", destroyMethod = "close")
   public ServiceRegistry serviceRegistry() {
     String address = registryProperties.getAddress();
@@ -61,6 +65,28 @@ public class PigeonAutoConfiguration implements InitializingBean {
     }
 
     return new ZookeeperServiceRegistry(address);
+  }
+
+  /** 配置动态代理ProxyFactory */
+  @Bean
+  public ProxyFactory proxyFactory() {
+    if (protocolProperties == null) {
+      return new JDKProxyFactory();
+    }
+
+    return ProxyFactoryType.valueOf(protocolProperties.getProxy()).getInstance();
+  }
+
+  /**
+   * 配置序列化器
+   */
+  @Bean
+  public Serializer serializer() {
+    if (protocolProperties == null) {
+      return new ProtoStuffSerializer();
+    }
+
+    return SerializerType.valueOf(protocolProperties.getSerializer()).getInstance();
   }
 
   @Bean
