@@ -26,21 +26,15 @@ import org.apache.zookeeper.CreateMode;
 public class ZookeeperServiceRegistry implements ServiceRegistry {
   private static final String ROOT_PATH = "pigeon";
   private CuratorFramework zkClient;
-  /** 集群连接地址字符串 */
-  private String address;
 
   private CountDownLatch latch = new CountDownLatch(1);
-
-  public ZookeeperServiceRegistry(String address) {
-    this.address = address;
-  }
 
   private static String generatePath(String interfaceName) {
     return ROOT_PATH + "/" + interfaceName;
   }
 
   @Override
-  public void init() {
+  public void init(String address) {
     // 统一限定命名空间
     zkClient =
         CuratorFrameworkFactory.builder()
