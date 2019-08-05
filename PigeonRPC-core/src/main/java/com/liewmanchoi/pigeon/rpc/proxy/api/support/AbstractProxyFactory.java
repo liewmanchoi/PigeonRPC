@@ -1,14 +1,12 @@
 package com.liewmanchoi.pigeon.rpc.proxy.api.support;
 
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
-import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.common.utils.GlobalRecycler;
-import com.liewmanchoi.pigeon.rpc.config.ReferenceConfig;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
-import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.support.AbstractInvoker;
 import com.liewmanchoi.pigeon.rpc.proxy.api.ProxyFactory;
+import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.UUID;
@@ -21,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class AbstractProxyFactory implements ProxyFactory {
-  private Map<Class<?>, Object> cacheMap = new ConcurrentHashMap<>();
+  private final Map<Class<?>, Object> cacheMap = new ConcurrentHashMap<>();
 
   public abstract <T> T doCreateProxy(Class<T> interfaceClass, Invoker<T> invoker);
 
@@ -50,32 +48,27 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
     }
 
     // 构建RPCRequest
-    RPCRequest rpcRequest = GlobalRecycler.reuse(RPCRequest.class);
+    RPCRequest request = GlobalRecycler.reuse(RPCRequest.class);
+    request.setRequestId(UUID.randomUUID().toString());
+    request.setInterfaceName(interfaceName);
+    request.setMethodName(methodName);
+    request.setArgTypes(argTypes);
+    request.setArgs(args);
+
     log.info(
-        "调用服务[interfaceName: {}, methodName: {}, argTypes: {}, args: {}]",
+        ">>>   调用服务[interfaceName: {}, methodName: {}, argTypes: {}, args: {}]   <<<",
         interfaceName,
         methodName,
         argTypes,
         args);
 
-    rpcRequest.setRequestId(UUID.randomUUID().toString());
-    rpcRequest.setInterfaceName(interfaceName);
-    rpcRequest.setMethodName(methodName);
-    rpcRequest.setArgTypes(argTypes);
-    rpcRequest.setArgs(args);
-
-    RPCRequestWrapper rpcRequestWrapper =
-        RPCRequestWrapper.builder()
-            .rpcRequest(rpcRequest)
-            .referenceConfig(ReferenceConfig.getConfigByInterfaceName(interfaceName))
-            .build();
-    RPCResponse rpcResponse = invoker.invoke(rpcRequestWrapper);
+    RPCResponse response = invoker.invoke(request);
 
     Object result = null;
-    if (rpcResponse != null) {
-      result = rpcResponse.getResult();
+    if (response != null) {
+      result = response.getResult();
       // 回收response
-      rpcResponse.recycle();
+      response.recycle();
     }
 
     return result;
@@ -95,47 +88,59 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
   @SuppressWarnings("unchecked")
   @Override
   public <T> T createProxy(Invoker<T> invoker) {
-    Class<T> anInterface = invoker.getInterface();
-    if (cacheMap.containsKey(anInterface)) {
-      return (T) cacheMap.get(anInterface);
+    Class<T> interfaceClass = invoker.getInterface();
+    if (cacheMap.containsKey(interfaceClass)) {
+      return (T) cacheMap.get(interfaceClass);
     }
 
-    // 如果缓存中不存在，则创建之
-    T t = doCreateProxy(anInterface, invoker);
-    cacheMap.put(anInterface, t);
+    // 如果没有interfaceClass对应的invoker，则创建之
+    T t = doCreateProxy(interfaceClass, invoker);
+    cacheMap.put(interfaceClass, t);
     return t;
   }
 
+  /** 供Provider使用 */
   @Override
-  public <T> Invoker<T> getInvoker(T proxy, Class<T> clazz) {
-    return new AbstractInvoker<T>() {
+  public <T> Invoker<T> getInvoker(T bean, Class<T> clazz) {
+    return new Invoker<T>() {
       @Override
-      public RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException {
+      public RPCResponse invoke(RPCRequest request) throws RPCException {
         RPCResponse response = GlobalRecycler.reuse(RPCResponse.class);
 
-        RPCRequest rpcRequest = rpcRequestWrapper.getRpcRequest();
         try {
-          Method method =
-              proxy.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getArgTypes());
-          response.setRequestId(rpcRequest.getRequestId());
+          Method method = bean.getClass().getMethod(request.getMethodName(), request.getArgTypes());
+          response.setRequestId(request.getRequestId());
 
-          // 核心：使用反射生成的代理类进行调用
-          Object result = method.invoke(proxy, rpcRequest.getArgs());
+          // 核心：使用反射进行方法调用
+          Object result = method.invoke(bean, request.getArgs());
           response.setResult(result);
+
+          log.info(
+              ">>>   调用[requestId: {}, interfaceName: {}, methodName: {}, argTypes: {}, args: {}]成功   <<<",
+              request.getRequestId(),
+              request.getInterfaceName(),
+              request.getMethodName(),
+              request.getArgTypes(),
+              request.getArgs());
         } catch (Exception e) {
           // 将异常放入到response内
           response.setCause(e);
           log.error(
-              "调用[requestId: {}, interfaceName: {}, methodName: {}, argTypes: {}, args: {}]失败，抛出异常[{}]",
-              rpcRequest.getRequestId(),
-              rpcRequest.getInterfaceName(),
-              rpcRequest.getMethodName(),
-              rpcRequest.getArgTypes(),
-              rpcRequest.getArgs(),
+              ">>>   调用[requestId: {}, interfaceName: {}, methodName: {}, argTypes: {}, args: {}]失败，抛出异常[{}]   <<<",
+              request.getRequestId(),
+              request.getInterfaceName(),
+              request.getMethodName(),
+              request.getArgTypes(),
+              request.getArgs(),
               e);
         }
 
         return response;
+      }
+
+      @Override
+      public ServiceURL getServiceURL() {
+        return ServiceURL.DEFAULT_SERVICE_URL;
       }
 
       @Override

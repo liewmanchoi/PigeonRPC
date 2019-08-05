@@ -19,10 +19,10 @@ public interface ProxyFactory {
   /**
    * 获取对应的Invoker类对象
    *
-   * @param proxy 代理类对象
+   * @param bean 服务提供者对象
    * @param clazz Class类对象
    * @param <T> 接口类型
    * @return Invoker<T>
    */
-  <T> Invoker<T> getInvoker(T proxy, Class<T> clazz);
+  <T> Invoker<T> getInvoker(T bean, Class<T> clazz);
 }
