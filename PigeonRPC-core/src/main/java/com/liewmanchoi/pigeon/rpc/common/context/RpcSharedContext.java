@@ -1,6 +1,5 @@
 package com.liewmanchoi.pigeon.rpc.common.context;
 
-import com.liewmanchoi.pigeon.rpc.config.ServiceConfig;
 import com.liewmanchoi.pigeon.rpc.invocation.future.ResponseFuture;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RpcSharedContext {
   private static final Map<String, ResponseFuture> RESPONSES_MAP = new ConcurrentHashMap<>();
-  private static final Map<String, ServiceConfig<?>> HANDLERS_MAP = new ConcurrentHashMap<>();
 
   public static void registerResponseFuture(String requestId, ResponseFuture future) {
     RESPONSES_MAP.put(requestId, future);
