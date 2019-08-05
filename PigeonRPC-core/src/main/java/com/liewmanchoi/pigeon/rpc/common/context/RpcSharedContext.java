@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wangsheng
  * @date 2019/6/27
  */
-public class RPCSharedContext {
+public class RpcSharedContext {
   private static final Map<String, ResponseFuture> RESPONSES_MAP = new ConcurrentHashMap<>();
   private static final Map<String, ServiceConfig<?>> HANDLERS_MAP = new ConcurrentHashMap<>();
 

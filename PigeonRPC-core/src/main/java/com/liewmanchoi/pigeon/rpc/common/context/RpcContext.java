@@ -11,15 +11,14 @@ import lombok.Setter;
  * @author wangsheng
  * @date 2019/7/1
  */
-public class RPCThreadPrivateContext {
-  private static ThreadLocal<RPCThreadPrivateContext> DEFAULT_CONTEXT =
-      ThreadLocal.withInitial(RPCThreadPrivateContext::new);
+public class RpcContext {
+  private static ThreadLocal<RpcContext> DEFAULT_CONTEXT = ThreadLocal.withInitial(RpcContext::new);
   @Getter @Setter private ResponseFuture future;
   @Getter @Setter private Invoker<?> invoker;
 
-  private RPCThreadPrivateContext() {}
+  private RpcContext() {}
 
-  public static RPCThreadPrivateContext getContext() {
+  public static RpcContext getContext() {
     return DEFAULT_CONTEXT.get();
   }
 }
