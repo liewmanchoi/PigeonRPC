@@ -2,8 +2,8 @@ package com.liewmanchoi.pigeon.rpc.protocol.pigeon;
 
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.config.ReferenceConfig;
-import com.liewmanchoi.pigeon.rpc.config.ServiceConfig;
+import com.liewmanchoi.pigeon.rpc.config.ConsumerBean;
+import com.liewmanchoi.pigeon.rpc.config.ProviderBean;
 import com.liewmanchoi.pigeon.rpc.protocol.api.exporter.Exporter;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.support.AbstractRemoteProtocol;
@@ -42,24 +42,24 @@ public class PigeonProtocol extends AbstractRemoteProtocol {
   }
 
   @Override
-  public <T> Exporter<T> export(Invoker<T> invoker, ServiceConfig<T> serviceConfig)
+  public <T> Exporter<T> export(Invoker<T> invoker, ProviderBean<T> providerBean)
       throws RPCException {
     PigeonExporter<T> pigeonExporter = new PigeonExporter<>();
     pigeonExporter.setInvoker(invoker);
-    pigeonExporter.setServiceConfig(serviceConfig);
+    pigeonExporter.setProviderBean(providerBean);
 
     putExporter(invoker.getInterface(), pigeonExporter);
     // 打开服务端
     openServer();
     // 暴露服务
     // 获取服务注册ServiceRegistry对象
-    ServiceRegistry serviceRegistry = serviceConfig.getRegistryConfig().getRegistryInstance();
+    ServiceRegistry serviceRegistry = providerBean.getCommonBean().getServiceRegistry();
     try {
       String address = InetAddress.getLocalHost().getHostAddress() + ":" + port;
 
       serviceRegistry.register(address, invoker.getInterfaceName());
     } catch (UnknownHostException e) {
-      log.error("获取本地Host失败", e);
+      log.error(">>>   获取本地Host失败   <<<", e);
       throw new RPCException(e, ErrorEnum.READ_LOCALHOST_ERROR, "获取本地Host失败");
     }
 
@@ -67,10 +67,10 @@ public class PigeonProtocol extends AbstractRemoteProtocol {
   }
 
   @Override
-  public <T> Invoker<T> refer(ReferenceConfig<T> referenceConfig, ServiceURL serviceURL)
+  public <T> Invoker<T> refer(ConsumerBean<T> consumerBean, ServiceURL serviceURL)
       throws RPCException {
     PigeonInvoker<T> invoker = new PigeonInvoker<>();
-    invoker.setInterfaceClass(referenceConfig.getInterfaceClass());
+    invoker.init(consumerBean.getInterfaceClass());
     invoker.setClient(initClient(serviceURL));
 
     return invoker;

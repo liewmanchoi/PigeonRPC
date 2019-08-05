@@ -1,6 +1,6 @@
 package com.liewmanchoi.pigeon.rpc.protocol.api.exporter;
 
-import com.liewmanchoi.pigeon.rpc.config.ServiceConfig;
+import com.liewmanchoi.pigeon.rpc.config.ProviderBean;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 
 /**
@@ -20,12 +20,11 @@ public interface Exporter<T> {
   Invoker<T> getInvoker();
 
   /**
-   * 获取ServiceConfig对象
+   * 获取ProviderBean对象
    *
-   * @return com.liewmanchoi.pigeon.rpc.config.ServiceConfig<T>
    * @date 2019/6/30
    */
-  ServiceConfig<T> getServiceConfig();
+  ProviderBean<T> getProviderBean();
 
   /**
    * TODO: 真实含义是什么？ 取消暴露服务

@@ -22,7 +22,7 @@ public class PigeonServer extends AbstractServer {
   protected ChannelInitializer initPipeline() {
     return new ChannelInitializer() {
       @Override
-      protected void initChannel(Channel ch) throws Exception {
+      protected void initChannel(Channel ch) {
         ch.pipeline()
             // 心跳检测
             .addLast(
@@ -38,7 +38,7 @@ public class PigeonServer extends AbstractServer {
                 new LengthFieldPrepender(
                     FrameConstant.LENGTH_FIELD_LENGTH, FrameConstant.LENGTH_ADJUSTMENT))
             // 出站：编码器（序列化）
-            .addLast("PigeonEncoder", new PigeonEncoder(getGlobalConfig().getSerializer()))
+            .addLast("PigeonEncoder", new PigeonEncoder(commonBean.getSerializer()))
             // 入站：基于帧长度
             .addLast(
                 "LengthFieldBasedFrameDecoder",

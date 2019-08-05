@@ -2,7 +2,7 @@ package com.liewmanchoi.pigeon.rpc.protocol.api.protocol.support;
 
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.config.CommonBean;
-import com.liewmanchoi.pigeon.rpc.config.ServiceConfig;
+import com.liewmanchoi.pigeon.rpc.config.ProviderBean;
 import com.liewmanchoi.pigeon.rpc.protocol.api.exporter.Exporter;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.Protocol;
 import java.util.Map;
@@ -31,12 +31,12 @@ public abstract class AbstractProtocol implements Protocol {
   }
 
   @Override
-  public ServiceConfig<?> referLocalService(String interfaceName) throws RPCException {
+  public ProviderBean<?> referLocalService(String interfaceName) throws RPCException {
     if (exporterMap.containsKey(interfaceName)) {
       log.warn("无法找到服务[{}]，服务可能没有发布", interfaceName);
       return null;
     }
 
-    return exporterMap.get(interfaceName).getServiceConfig();
+    return exporterMap.get(interfaceName).getProviderBean();
   }
 }
