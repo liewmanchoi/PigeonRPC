@@ -1,14 +1,8 @@
 package com.liewmanchoi.pigeon.rpc.protocol.api.invoker.support;
 
-import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
-import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
-import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
-import com.liewmanchoi.pigeon.rpc.filter.Filter;
+import com.liewmanchoi.pigeon.rpc.config.CommonBean;
+import com.liewmanchoi.pigeon.rpc.config.ConsumerBean;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
-import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
-import java.util.List;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,9 +12,16 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class AbstractInvoker<T> implements Invoker<T> {
-  @Setter private Class<T> interfaceClass;
+  @Setter protected Class<T> interfaceClass;
+  protected ConsumerBean<T> consumerBean;
+  protected CommonBean commonBean;
 
-  @Getter @Setter private GlobalConfig globalConfig;
+  @SuppressWarnings("unchecked")
+  public void init(Class<T> interfaceClass) {
+    this.interfaceClass = interfaceClass;
+    consumerBean = (ConsumerBean<T>) ConsumerBean.getBeanByName(getInterfaceName());
+    commonBean = consumerBean.getCommonBean();
+  }
 
   @Override
   public Class<T> getInterface() {
@@ -30,37 +31,5 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
   @Override
   public String getInterfaceName() {
     return interfaceClass.getName();
-  }
-
-  @Override
-  public ServiceURL getServiceURL() {
-    return ServiceURL.DEFAULT_SERVICE_URL;
-  }
-
-  /**
-   * 构建Filter链
-   *
-   * @param filters Filter对象列表
-   * @return Invoker
-   */
-  public Invoker<T> buildFilterChain(List<Filter> filters) {
-    Invoker<T> last = this;
-
-    if (!filters.isEmpty()) {
-      for (int i = filters.size() - 1; i >= 0; --i) {
-        final Filter filter = filters.get(i);
-        final Invoker<T> next = last;
-
-        last =
-            new AbstractInvokerDelegate<T>(this) {
-              @Override
-              public RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException {
-                return filter.invoke(next, rpcRequestWrapper);
-              }
-            };
-      }
-    }
-
-    return last;
   }
 }
