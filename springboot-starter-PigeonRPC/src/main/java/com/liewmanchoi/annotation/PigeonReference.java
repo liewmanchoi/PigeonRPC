@@ -18,28 +18,21 @@ import java.lang.annotation.Target;
 public @interface PigeonReference {
   //  InvokeType invokeMode() default InvokeType.ASYNC;
 
-  /**
-   * 服务提供者接口Class对象
-   */
+  /** 服务提供者接口Class对象 */
   Class<?> interfaceClass() default void.class;
 
-  /**
-   * 是否异步调用
-   */
-  boolean isAsync() default false;
+  /** 是否关心返回值 */
+  boolean oneway() default false;
 
-  /**
-   * 调用超时
-   */
-  long timeout() default 3000;
+  /** 是否异步调用 */
+  boolean async() default false;
 
-  /**
-   * 负载均衡方式
-   */
+  /** 调用超时 */
+  long timeout() default 3000L;
+
+  /** 负载均衡方式 */
   LoadBalancerType loadBalancer() default LoadBalancerType.RANDOM;
 
-  /**
-   * 容错模式
-   */
+  /** 容错模式 */
   FaultToleranceType faultTolerance() default FaultToleranceType.FAIL_SAFE;
 }
