@@ -4,7 +4,6 @@ import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.config.ReferenceConfig;
 import com.liewmanchoi.pigeon.rpc.config.ServiceConfig;
-import com.liewmanchoi.pigeon.rpc.filter.Filter;
 import com.liewmanchoi.pigeon.rpc.protocol.api.exporter.Exporter;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.support.AbstractRemoteProtocol;
@@ -16,7 +15,6 @@ import com.liewmanchoi.pigeon.rpc.transport.pigeon.client.PigeonClient;
 import com.liewmanchoi.pigeon.rpc.transport.pigeon.server.PigeonServer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,7 +27,7 @@ public class PigeonProtocol extends AbstractRemoteProtocol {
   @Override
   protected Client doInitClient(ServiceURL serviceURL) {
     PigeonClient pigeonClient = new PigeonClient();
-    pigeonClient.init(getGlobalConfig(), serviceURL);
+    pigeonClient.init(commonBean, serviceURL);
 
     return pigeonClient;
   }
@@ -37,7 +35,7 @@ public class PigeonProtocol extends AbstractRemoteProtocol {
   @Override
   protected Server doOpenServer() {
     PigeonServer pigeonServer = new PigeonServer();
-    pigeonServer.init(getGlobalConfig());
+    pigeonServer.init(commonBean, port);
     pigeonServer.start();
 
     return pigeonServer;
@@ -57,8 +55,7 @@ public class PigeonProtocol extends AbstractRemoteProtocol {
     // 获取服务注册ServiceRegistry对象
     ServiceRegistry serviceRegistry = serviceConfig.getRegistryConfig().getRegistryInstance();
     try {
-      String address =
-          InetAddress.getLocalHost().getHostAddress() + ":" + getGlobalConfig().getPort();
+      String address = InetAddress.getLocalHost().getHostAddress() + ":" + port;
 
       serviceRegistry.register(address, invoker.getInterfaceName());
     } catch (UnknownHostException e) {
@@ -74,15 +71,8 @@ public class PigeonProtocol extends AbstractRemoteProtocol {
       throws RPCException {
     PigeonInvoker<T> invoker = new PigeonInvoker<>();
     invoker.setInterfaceClass(referenceConfig.getInterfaceClass());
-    invoker.setGlobalConfig(getGlobalConfig());
     invoker.setClient(initClient(serviceURL));
 
-    // 获取拦截器
-    List<Filter> filters = referenceConfig.getFilters();
-    if (filters == null || filters.isEmpty()) {
-      return invoker;
-    }
-    // 构造包含拦截器调用链的InvokerDelegate匿名类对象
-    return invoker.buildFilterChain(filters);
+    return invoker;
   }
 }

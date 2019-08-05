@@ -14,15 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractRemoteProtocol extends AbstractProtocol {
 
-  /**
-   * address-client
-   */
+  /** address-client */
   private Map<String, Client> clientMap = new ConcurrentHashMap<>();
 
   private Map<String, Object> lockMap = new ConcurrentHashMap<>();
   private Server server;
 
-  public final Client initClient(ServiceURL serviceURL) {
+  protected final Client initClient(ServiceURL serviceURL) {
     String address = serviceURL.getAddress();
     lockMap.putIfAbsent(address, new Object());
     synchronized (lockMap.get(address)) {
@@ -33,7 +31,6 @@ public abstract class AbstractRemoteProtocol extends AbstractProtocol {
 
       Client client = doInitClient(serviceURL);
       clientMap.put(address, client);
-      // TODO: 是否需要移除lockMap中对应的键值对
       return client;
     }
   }
@@ -95,8 +92,15 @@ public abstract class AbstractRemoteProtocol extends AbstractProtocol {
 
   @Override
   public void destroy() {
+    // 关闭ServiceRegistry
+    commonBean.getServiceRegistry().close();
+    // 关闭任务线程池
+    commonBean.getServerExecutor().close();
+    // 关闭client
     clientMap.values().forEach(Client::close);
+    // 清空lockMap
     lockMap.clear();
+    // 关闭server
     if (server != null) {
       server.close();
     }
