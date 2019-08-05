@@ -2,15 +2,14 @@ package com.liewmanchoi.pigeon.rpc.cluster;
 
 import com.liewmanchoi.pigeon.rpc.cluster.api.FaultToleranceHandler;
 import com.liewmanchoi.pigeon.rpc.cluster.api.LoadBalancer;
-import com.liewmanchoi.pigeon.rpc.common.context.RPCThreadPrivateContext;
+import com.liewmanchoi.pigeon.rpc.common.context.RpcContext;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
-import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
 import com.liewmanchoi.pigeon.rpc.config.ReferenceConfig;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
+import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.support.AbstractInvoker;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.Protocol;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.support.AbstractRemoteProtocol;
 import com.liewmanchoi.pigeon.rpc.registry.api.EventHandler;
@@ -30,43 +29,32 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2019/7/1
  */
 @Slf4j
-public class ClusterInvoker<T> implements Invoker<T> {
-  private Class<T> interfaceClass;
-  private GlobalConfig globalConfig;
-
-  /** ClusterInvoker中包含的invoker列表 键为invoker所在的地址 */
+public class ClusterInvoker<T> extends AbstractInvoker<T> {
+  /** 键为invoker所在的地址，值为对应的Invoker */
   private Map<String, Invoker<T>> invokerMap = new ConcurrentHashMap<>();
 
-  public ClusterInvoker(Class<T> interfaceClass, GlobalConfig globalConfig) {
-    this.interfaceClass = interfaceClass;
-    this.globalConfig = globalConfig;
-    init();
-  }
-
   private void init() {
-
-    if (globalConfig.getProtocol() instanceof AbstractRemoteProtocol) {
-      ServiceRegistry serviceRegistry = globalConfig.getServiceRegistry();
+    if (commonBean.getProtocol() instanceof AbstractRemoteProtocol) {
+      ServiceRegistry serviceRegistry = commonBean.getServiceRegistry();
       // 进行服务发现
       serviceRegistry.discover(getInterfaceName(), new EventHandlerAdapter());
     }
   }
 
   @Override
-  public RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException {
+  public RPCResponse invoke(RPCRequest request) throws RPCException {
     try {
-      return invokeOnce(getInvokers(), rpcRequestWrapper);
+      return invokeOnce(getInvokers(), request);
     } catch (RPCException e) {
       // 如果发生错误，则开启容错模式，显然容错只会对同步调用有效，因为异步调用的返回值为null，无法判断是否发生了异常
       // 容错处理器
-      FaultToleranceHandler handler = globalConfig.getFaultToleranceHandler();
-      return handler.handle(this, rpcRequestWrapper, e);
+      FaultToleranceHandler handler = consumerBean.getFaultToleranceHandler();
+      return handler.handle(this, request, e);
     }
   }
 
-  private Invoker<?> doSelect(List<Invoker> invokers, RPCRequestWrapper rpcRequestWrapper) {
-    LoadBalancer loadBalancer = globalConfig.getLoadBalancer();
-    RPCRequest request = rpcRequestWrapper.getRpcRequest();
+  private Invoker<?> doSelect(List<Invoker> invokers, RPCRequest request) {
+    LoadBalancer loadBalancer = consumerBean.getLoadBalancer();
     while (!invokers.isEmpty()) {
       Invoker invoker = loadBalancer.select(invokers, request);
 
@@ -86,14 +74,14 @@ public class ClusterInvoker<T> implements Invoker<T> {
   /**
    * 单次调用，如果发生错误，直接抛出（供后续容错处理时调用）
    *
-   * @param rpcRequestWrapper request
+   * @param request 请求
    * @return RPCResponse
    */
-  private RPCResponse invokeOnce(List<Invoker> invokers, RPCRequestWrapper rpcRequestWrapper) {
+  private RPCResponse invokeOnce(List<Invoker> invokers, RPCRequest request) {
     // 选择可用的Invoker
-    Invoker<?> invoker = doSelect(invokers, rpcRequestWrapper);
-    RPCThreadPrivateContext.getContext().setInvoker(invoker);
-    RPCResponse response = invoker.invoke(rpcRequestWrapper);
+    Invoker<?> invoker = doSelect(invokers, request);
+    RpcContext.getContext().setInvoker(invoker);
+    RPCResponse response = invoker.invoke(request);
 
     // response为空，说明是异步调用ASYNC
     if (response != null && response.hasError()) {
@@ -101,22 +89,22 @@ public class ClusterInvoker<T> implements Invoker<T> {
 
       // 回收response对象
       response.recycle();
-      log.error("服务调用发生异常：[{}]", rpcRequestWrapper.getRpcRequest());
+      log.error("服务调用发生异常：[{}]", request);
       throw new RPCException(cause, ErrorEnum.SERVICE_INVOCATION_FAILURE, "服务调用失败");
     }
 
-    log.info("requestId为[{}]的调用成功", rpcRequestWrapper.getRpcRequest().getRequestId());
+    log.info("requestId为[{}]的调用成功", request.getRequestId());
     return response;
   }
 
   @Override
   public Class<T> getInterface() {
-    return interfaceClass;
+    return consumerBean.getInterfaceClass();
   }
 
   @Override
   public String getInterfaceName() {
-    return interfaceClass.getName();
+    return consumerBean.getInterfaceName();
   }
 
   private List<Invoker> getInvokers() {
@@ -125,7 +113,7 @@ public class ClusterInvoker<T> implements Invoker<T> {
 
   @Override
   public ServiceURL getServiceURL() {
-    throw new UnsupportedOperationException("ClusterInvoker不支持getServiceURL()方法");
+    throw new UnsupportedOperationException(">>>   ClusterInvoker不支持getServiceURL()方法   <<<");
   }
 
   @Override
@@ -143,7 +131,7 @@ public class ClusterInvoker<T> implements Invoker<T> {
     @SuppressWarnings("unchecked")
     @Override
     public void add(ServiceURL serviceURL) {
-      Protocol protocol = globalConfig.getProtocol();
+      Protocol protocol = commonBean.getProtocol();
       String address = serviceURL.getAddress();
       String interfaceName = getInterfaceName();
 
@@ -159,7 +147,7 @@ public class ClusterInvoker<T> implements Invoker<T> {
 
     @Override
     public void update(ServiceURL serviceURL) {
-      Protocol protocol = globalConfig.getProtocol();
+      Protocol protocol = commonBean.getProtocol();
       String address = serviceURL.getAddress();
       String interfaceName = getInterfaceName();
 
@@ -177,7 +165,7 @@ public class ClusterInvoker<T> implements Invoker<T> {
     @Override
     public void remove(ServiceURL serviceURL) {
       // serviceURL对应的服务器出故障了，应该关闭
-      Protocol protocol = globalConfig.getProtocol();
+      Protocol protocol = commonBean.getProtocol();
       String address = serviceURL.getAddress();
       String interfaceName = getInterfaceName();
 
