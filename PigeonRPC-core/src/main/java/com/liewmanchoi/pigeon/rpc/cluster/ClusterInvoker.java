@@ -7,7 +7,7 @@ import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.config.ReferenceConfig;
+import com.liewmanchoi.pigeon.rpc.config.ConsumerBean;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.support.AbstractInvoker;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.Protocol;
@@ -138,8 +138,7 @@ public class ClusterInvoker<T> extends AbstractInvoker<T> {
       if (!invokerMap.containsKey(address)) {
         log.info("添加Invoker，服务器配置为[{}]，对应的接口为[{}]", serviceURL, interfaceName);
         // 引用服务
-        Invoker invoker =
-            protocol.refer(ReferenceConfig.getConfigByInterfaceName(interfaceName), serviceURL);
+        Invoker invoker = protocol.refer(ConsumerBean.getBeanByName(interfaceName), serviceURL);
         // 更新invokerMap
         invokerMap.put(address, (Invoker<T>) invoker);
       }
