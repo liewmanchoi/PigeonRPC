@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>PigeonRPC-sample</artifactId>
+  <modelVersion>4.0.0</modelVersion>
+
+  <modules>
+    <module>sample-api</module>
+    <module>sample-provider</module>
+    <module>sample-consumer</module>
+  </modules>
+  <packaging>pom</packaging>
+  <parent>
+    <artifactId>PigeonRPC</artifactId>
+    <groupId>com.liewmanchoi</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+</project>
