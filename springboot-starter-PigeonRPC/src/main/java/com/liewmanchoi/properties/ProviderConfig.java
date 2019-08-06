@@ -9,5 +9,4 @@ import lombok.Data;
 @Data
 public class ProviderConfig {
   private Integer port;
-  private Integer workerThreads;
 }
