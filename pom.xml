@@ -3,6 +3,8 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+  <artifactId>PigeonRPC</artifactId>
+
   <dependencies>
     <dependency>
       <artifactId>lombok</artifactId>
@@ -89,14 +91,13 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <groupId>com.liewmanchoi</groupId>
-  <artifactId>PigeonRPC</artifactId>
   <modelVersion>4.0.0</modelVersion>
-
   <modules>
     <module>PigeonRPC-core</module>
   </modules>
+
+  <packaging>pom</packaging>
 
   <properties>
     <curator.version>4.2.0</curator.version>
