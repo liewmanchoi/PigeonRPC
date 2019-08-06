@@ -42,17 +42,11 @@ public enum ErrorEnum {
   NO_SUPPORTED_INSTANCE("接口没有可用的实现类"),
   /** 扩展配置文件错误 */
   EXTENSION_CONFIG_FILE_ERROR("扩展配置文件错误"),
-  /**
-   * 注册proxy实例失败
-   */
+  /** 注册proxy实例失败 */
   AUTOWIRE_REFERENCE_PROXY_ERROR("注册proxy实例失败"),
-  /**
-   * 该服务未实现接口
-   */
+  /** 该服务未实现接口 */
   SERVICE_DIDNT_IMPLEMENT_INTERFACE("该服务未实现接口"),
-  /**
-   * 配置文件错误
-   */
+  /** 配置文件错误 */
   APP_CONFIG_FILE_ERROR("application配置文件错误");
 
   private @Getter String errorCode;

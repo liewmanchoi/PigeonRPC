@@ -3,7 +3,6 @@ package com.liewmanchoi.pigeon.rpc.transport.api;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
-import java.util.concurrent.Future;
 
 /**
  * @author wangsheng
@@ -15,13 +14,10 @@ public interface Client {
    * 发起远程调用
    *
    * @param request 调用请求
-   * @return Future<RPCResponse> 异步调用返回结果
    */
-  Future<RPCResponse> submit(RPCRequest request);
+  void submit(RPCRequest request);
 
-  /**
-   * 关闭
-   */
+  /** 关闭 */
   void close();
 
   /**

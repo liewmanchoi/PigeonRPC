@@ -2,11 +2,11 @@ package com.liewmanchoi.pigeon.rpc.registry.zookeeper;
 
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.config.RegistryConfig;
 import com.liewmanchoi.pigeon.rpc.registry.api.EventHandler;
+import com.liewmanchoi.pigeon.rpc.registry.api.ServiceRegistry;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
-import com.liewmanchoi.pigeon.rpc.registry.api.support.AbstractServiceRegistry;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CountDownLatch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -14,6 +14,7 @@ import org.apache.curator.framework.recipes.cache.NodeCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache.StartMode;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 
@@ -22,37 +23,53 @@ import org.apache.zookeeper.CreateMode;
  * @date 2019/7/3
  */
 @Slf4j
-public class ZookeeperServiceRegistry extends AbstractServiceRegistry {
+public class ZookeeperServiceRegistry implements ServiceRegistry {
   private static final String ROOT_PATH = "pigeon";
   private CuratorFramework zkClient;
 
-  public ZookeeperServiceRegistry(RegistryConfig registryConfig) {
-    this.registryConfig = registryConfig;
-  }
+  private CountDownLatch latch = new CountDownLatch(1);
 
-  public static String generatePath(String interfaceName) {
+  private static String generatePath(String interfaceName) {
     return ROOT_PATH + "/" + interfaceName;
   }
 
   @Override
-  public void init() {
+  public void init(String address) {
     // 统一限定命名空间
     zkClient =
         CuratorFrameworkFactory.builder()
-            .connectString(registryConfig.getAddress())
+            .connectString(address)
             .retryPolicy(new ExponentialBackoffRetry(1000, 3))
             .namespace(ROOT_PATH)
             .build();
     // 启动CuratorFramework，该接口为同步接口，能够阻塞直至成功建立连接或者失败
     zkClient.start();
 
-    // 如果无法成功建立连接
-    if (zkClient.checkExists() == null) {
-      log.error("无法连接到Zookeeper集群");
-      throw new RPCException(ErrorEnum.FAILED_CONNECT_ZOOKEEPER, "无法连接到Zookeeper集群");
+    // 添加回调，处理连接事件
+    zkClient
+        .getConnectionStateListenable()
+        .addListener(
+            (CuratorFramework client, ConnectionState newState) -> {
+              switch (newState) {
+                case CONNECTED:
+                  log.info(">>>   连接zookeeper集群成功   <<<");
+                  latch.countDown();
+                  break;
+                case RECONNECTED:
+                  log.info(">>>   重新连接zookeeper集群   <<<");
+                  break;
+                default:
+                  log.error(">>>   与zookeeper集群的连接发生异常   <<<");
+                  break;
+              }
+            });
+    // 阻塞程序，直至成功建立连接
+    try {
+      latch.await();
+    } catch (InterruptedException e) {
+      log.error(">>>   发生中断异常   <<<");
+      throw new RuntimeException("发生中断异常");
     }
-
-    log.info("成功与Zookeeper注册中心建立连接");
   }
 
   @Override

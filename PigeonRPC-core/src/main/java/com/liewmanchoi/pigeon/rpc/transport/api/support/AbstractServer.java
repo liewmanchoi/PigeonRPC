@@ -1,10 +1,13 @@
 package com.liewmanchoi.pigeon.rpc.transport.api.support;
 
+import com.liewmanchoi.pigeon.rpc.common.domain.Message;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
-import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
-import com.liewmanchoi.pigeon.rpc.config.RegistryConfig;
-import com.liewmanchoi.pigeon.rpc.config.ServiceConfig;
+import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
+import com.liewmanchoi.pigeon.rpc.config.CommonBean;
+import com.liewmanchoi.pigeon.rpc.config.ProviderBean;
 import com.liewmanchoi.pigeon.rpc.executor.api.PigeonExecutor;
+import com.liewmanchoi.pigeon.rpc.protocol.api.exporter.Exporter;
+import com.liewmanchoi.pigeon.rpc.protocol.api.invoker.Invoker;
 import com.liewmanchoi.pigeon.rpc.protocol.api.protocol.Protocol;
 import com.liewmanchoi.pigeon.rpc.transport.api.Server;
 import com.liewmanchoi.pigeon.rpc.transport.api.converter.MessageConverter;
@@ -20,8 +23,6 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import java.net.InetAddress;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -30,15 +31,17 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class AbstractServer implements Server {
-  @Getter private GlobalConfig globalConfig;
+  protected CommonBean commonBean;
+  private int port;
   private ChannelInitializer channelInitializer;
   private MessageConverter messageConverter;
   private EventLoopGroup bossGroup;
   private EventLoopGroup workerGroup;
   private ChannelFuture channelFuture;
 
-  public void init(GlobalConfig globalConfig) {
-    this.globalConfig = globalConfig;
+  public void init(CommonBean commonBean, int port) {
+    this.commonBean = commonBean;
+    this.port = port;
     this.channelInitializer = initPipeline();
     this.messageConverter = initMessageConverter();
   }
@@ -74,36 +77,43 @@ public abstract class AbstractServer implements Server {
         .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
         .option(ChannelOption.SO_BACKLOG, 128)
         .option(ChannelOption.SO_REUSEADDR, true)
-        //                .option(ChannelOption.SO_SNDBUF, 32 * 1024)
-        //                .option(ChannelOption.SO_RCVBUF, 32 * 1024)
-        .option(ChannelOption.TCP_NODELAY, true)
+        .childOption(ChannelOption.TCP_NODELAY, true)
         .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
     try {
       // 获取绑定地址
-      String address = InetAddress.getLocalHost().getHostAddress();
-      channelFuture = serverBootstrap.bind(address, getGlobalConfig().getPort());
+      channelFuture = serverBootstrap.bind(port);
       // 添加回调通知
       channelFuture.addListener(
-          (ChannelFuture future) -> {
-            log.info("成功启动服务器，当前服务器类型-{}", this.getClass().getSimpleName());
-          });
+          (ChannelFuture future) ->
+              log.info(">>>   成功启动服务器，当前服务器类型-{}   <<<", this.getClass().getSimpleName()));
     } catch (Exception e) {
-      log.error("服务器启动过程中发生异常", e);
+      log.error(">>>   服务器启动过程中发生异常   <<<", e);
     }
   }
 
   @Override
   public void handleRPCRequest(RPCRequest request, ChannelHandlerContext ctx) {
-    GlobalConfig globalConfig = getGlobalConfig();
-    Protocol protocol = globalConfig.getProtocol();
-    PigeonExecutor executor = globalConfig.getServerExecutor();
+    Protocol protocol = commonBean.getProtocol();
+    PigeonExecutor executor = commonBean.getServerExecutor();
 
     // 查找已经发布的服务
-    ServiceConfig<?> serviceConfig = protocol.referLocalService(request.getInterfaceName());
+    ProviderBean<?> providerBean = protocol.referLocalService(request.getInterfaceName());
 
-    // 构造任务
-    Runnable runnable = new TaskRunner(ctx, request, serviceConfig, messageConverter);
+    // 获取对应的Exporter
+    Exporter<?> exporter = providerBean.getExporter();
+    // 获取对应的Invoker
+    Invoker<?> invoker = exporter.getInvoker();
+
+    // 构造调用任务
+    Runnable runnable =
+        () -> {
+          // 执行方法调用，获得RPCResponse对象
+          RPCResponse response = invoker.invoke(request);
+          // 发送response
+          ctx.channel()
+              .writeAndFlush(messageConverter.convertToObject(Message.buildResponse(response)));
+        };
 
     // 提交给线程池执行
     executor.submit(runnable);
@@ -111,10 +121,6 @@ public abstract class AbstractServer implements Server {
 
   @Override
   public void close() {
-    RegistryConfig registryConfig = getGlobalConfig().getRegistryConfig();
-    // 关闭zookeeper的连接
-    registryConfig.close();
-
     if (workerGroup != null) {
       workerGroup.shutdownGracefully();
     }

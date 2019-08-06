@@ -6,7 +6,7 @@ package com.liewmanchoi.pigeon.rpc.registry.api;
  */
 public interface ServiceRegistry {
   /** 初始化 */
-  void init();
+  void init(String address);
 
   /**
    * 服务发现

@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
-
   private Server server;
 
   @Override
@@ -31,6 +30,7 @@ public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
       // 响应PONG
       ctx.writeAndFlush(Message.PONG);
     } else if (type == Message.REQUEST) {
+      // 处理RPC调用请求
       server.handleRPCRequest(message.getRpcRequest(), ctx);
     }
 
@@ -44,10 +44,7 @@ public class ServerMessageHandler extends ChannelInboundHandlerAdapter {
     } finally {
       // 直接关闭连接
       ChannelFuture channelFuture = ctx.close();
-      channelFuture.addListener(
-          (ChannelFuture future) -> {
-            log.info("服务端主动关闭连接");
-          });
+      channelFuture.addListener((ChannelFuture future) -> log.info("服务端主动关闭连接"));
     }
   }
 }

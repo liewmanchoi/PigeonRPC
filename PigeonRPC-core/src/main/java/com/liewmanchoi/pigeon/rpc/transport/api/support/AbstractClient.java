@@ -1,12 +1,13 @@
 package com.liewmanchoi.pigeon.rpc.transport.api.support;
 
-import com.liewmanchoi.pigeon.rpc.common.context.RPCThreadSharedContext;
+import com.liewmanchoi.pigeon.rpc.common.context.RpcSharedContext;
 import com.liewmanchoi.pigeon.rpc.common.domain.Message;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.enumeration.ErrorEnum;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
-import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
+import com.liewmanchoi.pigeon.rpc.config.CommonBean;
+import com.liewmanchoi.pigeon.rpc.invocation.future.ResponseFuture;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
 import com.liewmanchoi.pigeon.rpc.transport.api.Client;
 import com.liewmanchoi.pigeon.rpc.transport.api.converter.AbstractClientMessageConverter;
@@ -24,8 +25,6 @@ import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +37,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class AbstractClient implements Client {
-
-  @Getter
-  private ServiceURL serviceURL;
-
-  private GlobalConfig globalConfig;
+  protected CommonBean commonBean;
+  @Getter private ServiceURL serviceURL;
   private Bootstrap bootstrap;
   private EventLoopGroup eventLoopGroup;
   private volatile Channel futureChannel;
@@ -68,11 +64,9 @@ public abstract class AbstractClient implements Client {
    */
   protected abstract AbstractClientMessageConverter initConverter();
 
-  /**
-   * 初始化连接（包括建立连接）
-   */
-  public void init(GlobalConfig globalConfig, ServiceURL serviceURL) {
-    this.globalConfig = globalConfig;
+  /** 初始化连接（包括建立连接） */
+  public void init(CommonBean commonBean, ServiceURL serviceURL) {
+    this.commonBean = commonBean;
     this.serviceURL = serviceURL;
 
     synchronized (AbstractClient.class) {
@@ -96,9 +90,7 @@ public abstract class AbstractClient implements Client {
     }
   }
 
-  /**
-   * 建立连接
-   */
+  /** 建立连接 */
   private synchronized void connect() {
     ChannelFuture channelFuture;
     String address = getServiceURL().getAddress();
@@ -165,11 +157,9 @@ public abstract class AbstractClient implements Client {
     }
   }
 
-  /**
-   * 提交并发送RPC调用请求
-   */
+  /** 提交并发送RPC调用请求 */
   @Override
-  public Future<RPCResponse> submit(RPCRequest request) {
+  public void submit(RPCRequest request) {
     if (!initialized) {
       connect();
     }
@@ -179,32 +169,25 @@ public abstract class AbstractClient implements Client {
           ErrorEnum.SUBMIT_AFTER_ENDPOINT_CLOSED, "当前client-{}关闭后仍然在提交任务", serviceURL.getAddress());
     }
 
-    log.info("客户端发起请求：{}，请求的服务器-{}", request, serviceURL.getAddress());
-    // TODO: CompletableFuture改进
-    CompletableFuture<RPCResponse> responseCompletableFuture = new CompletableFuture<>();
-    // 缓存结果
-    RPCThreadSharedContext.registerResponseFuture(
-        request.getRequestId(), responseCompletableFuture);
+    log.info(">>>   客户端发起请求[{}]，请求的服务器[{}]   <<<", request, serviceURL.getAddress());
+
     // 将request对象封装成Message对象
     Object data = messageConverter.convertToObject(Message.builderRequest(request));
     // 发送message对象
-    log.info("即将发送请求消息-{}", serviceURL.getAddress());
+    log.info(">>>   正在发送调用请求[{}]   <<<", serviceURL.getAddress());
     futureChannel.writeAndFlush(data);
-
-    // 返回异步调用结果
-    return responseCompletableFuture;
   }
 
   @Override
   public void handleRPCResponse(RPCResponse response) {
     // 将缓存中取出对应的Response future，并设置为相应的值
-    CompletableFuture<RPCResponse> future =
-        RPCThreadSharedContext.getAndRemoveResponseFuture(response.getRequestId());
-    future.complete(response);
-  }
+    ResponseFuture future = RpcSharedContext.getAndRemoveResponseFuture(response.getRequestId());
+    if (future != null) {
+      future.complete(response);
+      return;
+    }
 
-  protected GlobalConfig getGlobalConfig() {
-    return globalConfig;
+    log.warn(">>>   响应[{}]没有对应的ResponseFuture   <<<", response.getRequestId());
   }
 
   @Override

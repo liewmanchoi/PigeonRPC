@@ -1,6 +1,6 @@
 package com.liewmanchoi.pigeon.rpc.protocol.api.invoker;
 
-import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequestWrapper;
+import com.liewmanchoi.pigeon.rpc.common.domain.RPCRequest;
 import com.liewmanchoi.pigeon.rpc.common.domain.RPCResponse;
 import com.liewmanchoi.pigeon.rpc.common.exception.RPCException;
 import com.liewmanchoi.pigeon.rpc.registry.api.ServiceURL;
@@ -34,11 +34,11 @@ public interface Invoker<T> {
   String getInterfaceName();
 
   /**
-   * @param rpcRequestWrapper 调用参数
+   * @param request 调用参数
    * @return RPCResponse
    * @throws RPCException 自定义异常
    */
-  RPCResponse invoke(RPCRequestWrapper rpcRequestWrapper) throws RPCException;
+  RPCResponse invoke(RPCRequest request) throws RPCException;
 
   /**
    * 返回注册地址

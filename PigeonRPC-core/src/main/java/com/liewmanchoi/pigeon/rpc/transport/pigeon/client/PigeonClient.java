@@ -35,7 +35,7 @@ public class PigeonClient extends AbstractClient {
                 "LengthFieldPrepender",
                 new LengthFieldPrepender(
                     FrameConstant.LENGTH_FIELD_LENGTH, FrameConstant.LENGTH_ADJUSTMENT))
-            .addLast("PigeonEncoder", new PigeonEncoder(getGlobalConfig().getSerializer()))
+            .addLast("PigeonEncoder", new PigeonEncoder(commonBean.getSerializer()))
             // 入站解码器
             .addLast(
                 "LengthFieldBasedFrameDecoder",
@@ -46,7 +46,7 @@ public class PigeonClient extends AbstractClient {
                     FrameConstant.LENGTH_ADJUSTMENT,
                     FrameConstant.INITIAL_BYTES_TO_STRIP))
             // ByteBuf -> Message
-            .addLast("PigeonDecoder", new PigeonDecoder(getGlobalConfig().getSerializer()))
+            .addLast("PigeonDecoder", new PigeonDecoder(commonBean.getSerializer()))
             // 心跳检测
             .addLast("ClientHearBeatHandler", new ClientHeartBeatHandler(PigeonClient.this))
             // 处理消息
