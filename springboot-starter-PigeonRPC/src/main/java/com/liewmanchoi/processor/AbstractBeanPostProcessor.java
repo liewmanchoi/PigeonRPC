@@ -1,11 +1,7 @@
 package com.liewmanchoi.processor;
 
-import com.liewmanchoi.pigeon.rpc.config.AbstractConfig;
-import com.liewmanchoi.pigeon.rpc.config.ApplicationConfig;
-import com.liewmanchoi.pigeon.rpc.config.ClusterConfig;
-import com.liewmanchoi.pigeon.rpc.config.GlobalConfig;
-import com.liewmanchoi.pigeon.rpc.config.ProtocolConfig;
-import com.liewmanchoi.pigeon.rpc.config.RegistryConfig;
+import com.liewmanchoi.pigeon.rpc.config.AbstractBean;
+import com.liewmanchoi.pigeon.rpc.config.CommonBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
@@ -17,26 +13,15 @@ import org.springframework.context.ApplicationContextAware;
  */
 public abstract class AbstractBeanPostProcessor
     implements BeanPostProcessor, ApplicationContextAware {
+  private CommonBean commonBean;
+  private ApplicationContext context;
 
-  protected ApplicationContext context;
-  private GlobalConfig globalConfig;
-
-  public void init(
-      ApplicationConfig applicationConfig,
-      ClusterConfig clusterConfig,
-      ProtocolConfig protocolConfig,
-      RegistryConfig registryConfig) {
-    globalConfig =
-        GlobalConfig.builder()
-            .applicationConfig(applicationConfig)
-            .clusterConfig(clusterConfig)
-            .protocolConfig(protocolConfig)
-            .registryConfig(registryConfig)
-            .build();
+  public void init(CommonBean commonBean) {
+    this.commonBean = commonBean;
   }
 
-  void initConfig(AbstractConfig abstractConfig) {
-    abstractConfig.init(globalConfig);
+  void initCommon(AbstractBean abstractBean) {
+    abstractBean.setCommonBean(commonBean);
   }
 
   @Override
