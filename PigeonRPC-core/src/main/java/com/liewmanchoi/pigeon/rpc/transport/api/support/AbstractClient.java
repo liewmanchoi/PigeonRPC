@@ -182,7 +182,12 @@ public abstract class AbstractClient implements Client {
   public void handleRPCResponse(RPCResponse response) {
     // 将缓存中取出对应的Response future，并设置为相应的值
     ResponseFuture future = RpcSharedContext.getAndRemoveResponseFuture(response.getRequestId());
-    future.complete(response);
+    if (future != null) {
+      future.complete(response);
+      return;
+    }
+
+    log.warn(">>>   响应[{}]没有对应的ResponseFuture   <<<", response.getRequestId());
   }
 
   @Override
